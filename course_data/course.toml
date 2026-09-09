@@ -1,0 +1,103 @@
+[course]
+code   = "CIVL 2050"
+title  = "Fluid Mechanics"
+term   = "Fall 2026"
+room   = "Carnegie Building 113"
+
+[term]
+window_start = "2026-08-24"    # first Monday shown, not necessarily the first class
+window_end   = "2026-12-22"
+meeting_hours = 0.5   # relative effort per class meeting (1.0 = one homework); the whole chart is relative
+first_class  = "2026-08-27"
+last_class   = "2026-12-11"
+
+[instructor]
+enrollment              = 85
+grading_turnaround_days = 7
+
+# ---- assessment vocabulary -------------------------------------------------
+# A new course changes THIS block and its CSVs. No renderer code changes.
+# color "hue:N" generates a ramp at matched lightness/chroma so every kind in
+# every course sits in the same visual system and survives greyscale printing.
+
+[[kinds]]
+id = "homework"
+student_hours = 1.0
+label = "Homework"
+color = "hue:60"
+lane = "homework"
+marker = "caret"
+order = 30
+effort = 4.0
+
+[[kinds]]
+id = "prelab"
+student_hours = 0.5
+label = "Pre-lab"
+color = "hue:165"
+lane = "labs"
+marker = "square"
+order = 40
+effort = 1.0
+fill = "outline"
+
+[[kinds]]
+id = "session"
+student_hours = 1.0
+label = "Lab session"
+color = "hue:165"
+lane = "labs"
+marker = "dot"
+order = 20
+deadline = false
+
+[[kinds]]
+id = "report"
+student_hours = 3.0
+label = "Lab report"
+color = "hue:165"
+lane = "labs"
+marker = "square"
+order = 30
+effort = 18.0
+fill = "solid"
+
+[[kinds]]
+id = "exam"
+student_hours = 0.0
+label = "Exam"
+color = "hue:28"
+lane = "exams"
+marker = "diamond"
+order = 0
+effort = 6.0
+fill = "solid"
+
+[[kinds]]
+id = "coverage"
+student_hours = 0.0
+label = "Exam coverage"
+color = "hue:28"
+lane = "exams"
+marker = "none"
+order = 90
+deadline = false
+
+[[kinds]]
+id = "emphasis"
+student_hours = 0.0
+label = "Final emphasis"
+color = "hue:28"
+lane = "exams"
+marker = "none"
+order = 91
+deadline = false
+fill = "solid"
+
+# Lab section meeting slots (constant across all labs). The syllabus lab table
+# derives each run time from the lab's date plus these; coursemap ignores them.
+[sections]
+sec01 = "10:00-11:50 AM"
+sec02 = "10:00-11:50 AM"
+sec03 = "2:00-3:50 PM"
+

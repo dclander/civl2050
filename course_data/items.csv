@@ -1,0 +1,32 @@
+id,group,kind,shape,label,start,end,anchor,note,topics,drop
+HW1,hw1,homework,span,HW1,2026-08-27,2026-09-09,C01-C02,Default Wednesday due date,"Ideal gas law, pressure, manometry",yes
+HW2,hw2,homework,span,HW2,2026-09-03,2026-09-16,C03-C04,Default Wednesday due date,"Forces on plane and curved surfaces, buoyancy",yes
+HW3,hw3,homework,span,HW3,2026-09-14,2026-09-23,C05-C06,Due before review/exam week pressure peaks,"Flow kinematics, conservation of mass",yes
+HW4,hw4,homework,span,HW4,2026-09-17,2026-09-25,C07-C08,Exam-squeeze exception before Monday Exam 1,"Conservation of energy, Bernoulli equation",yes
+HW5,hw5,homework,span,HW5,2026-10-05,2026-10-14,C11-C12,Default Wednesday due date,Flow measurement; conservation of momentum,yes
+HW6,hw6,homework,span,HW6,2026-10-15,2026-10-21,C13-C14,Default Wednesday due date,Dimensional analysis and similitude,yes
+HW7,hw7,homework,span,HW7,2026-10-19,2026-10-28,C15-C16,Default Wednesday due date,Laminar and turbulent flow in pipes,yes
+HW8,hw8,homework,span,HW8,2026-10-26,2026-11-11,C17-C19,Default Wednesday due date; before Exam 2,Steady-flow energy equation; pipe systems,yes
+HW9,hw9,homework,span,HW9,2026-11-05,2026-11-16,C20-C22,Exam-squeeze exception before Thursday Exam 2,Pump performance; boundary layers and drag,yes
+HW10,hw10,homework,span,HW10,2026-11-30,2026-12-09,C25-C26,Default Wednesday due date; not drop-eligible,Turbines and hydropower,no
+PL1-01,lab1,prelab,point,PL1 01,2026-10-05,,,night before the Tue lab,,
+PL1-0203,lab1,prelab,point,PL1 02·03,2026-10-06,,,night before the Wed lab,,
+LAB1-01,lab1,session,point,Lab1 01,2026-10-06,,,Flow meters,,
+LAB1-0203,lab1,session,point,Lab1 02·03,2026-10-07,,,Flow meters,,
+R1,lab1,report,span,Lab 1 report,2026-10-07,2026-10-18,,Flow meters,,
+PL2-01,lab2,prelab,point,PL2 01,2026-10-19,,,night before the Tue lab,,
+PL2-0203,lab2,prelab,point,PL2 02·03,2026-10-20,,,night before the Wed lab,,
+LAB2-01,lab2,session,point,Lab2 01,2026-10-20,,,Impact of a jet,,
+LAB2-0203,lab2,session,point,Lab2 02·03,2026-10-21,,,Impact of a jet,,
+R2,lab2,report,span,Lab 2 report,2026-10-21,2026-11-01,,Impact of a jet,,
+PL3-01,lab3,prelab,point,PL3 01,2026-11-09,,,night before the Tue lab,,
+PL3-0203,lab3,prelab,point,PL3 02·03,2026-11-10,,,night before the Wed lab,,
+LAB3-01,lab3,session,point,Lab3 01,2026-11-10,,,Energy loss in pipes + Osborne Reynolds,,
+LAB3-0203,lab3,session,point,Lab3 02·03,2026-11-11,,,Energy loss in pipes + Osborne Reynolds,,
+R3,lab3,report,span,Lab 3 report,2026-11-11,2026-12-06,,Energy loss in pipes + Osborne Reynolds,,
+Exam1,exam1,exam,point,Exam 1,2026-09-28,,C01-C08,one single-sided crib sheet,,
+Exam1-COV,exam1,coverage,span,Exam 1 coverage,2026-08-27,2026-09-24,C01-C08,one single-sided crib sheet,,
+Exam2,exam2,exam,point,Exam 2,2026-11-19,,C10-C23,two single-sided crib sheets,,
+Exam2-COV,exam2,coverage,span,Exam 2 coverage,2026-10-01,2026-11-16,C10-C23,two single-sided crib sheets,,
+Final-COV,final,coverage,span,Final Exam coverage,2026-08-27,2026-12-07,C01-C27,cumulative; weighted toward post-Exam-2 content (C25-C26),,
+Final-EMPH,final,emphasis,span,emphasis,2026-11-30,2026-12-03,,,,

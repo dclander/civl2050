@@ -1,0 +1,16 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+# LaTeX build noise
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Worked solutions stay local. A PUBLIC repo makes every folder browsable on
+# github.com, not just the /docs folder that Pages serves.
+notes/

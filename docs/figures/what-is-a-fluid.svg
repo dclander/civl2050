@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1010" width="1600" height="1010" font-family="Helvetica Neue,Helvetica,Arial,sans-serif">
+<rect width="1600" height="1010" fill="#FFFFFF"/>
+<defs>
+  <marker id="aS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#BD5A0E"/></marker>
+  <marker id="aF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#0092AB"/></marker>
+  <marker id="aK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#7C848D"/></marker>
+</defs>
+
+<text x="60" y="62" font-size="30" font-weight="700" fill="#15181C">What is a fluid?</text>
+<text x="60" y="92" font-size="18" fill="#7C848D">The question is how it answers a shear stress.</text>
+<line x1="60" y1="116" x2="1540" y2="116" stroke="#D8DCDA" stroke-width="1.5"/>
+
+<!-- ================= SOLID ================= -->
+<text x="120" y="164" font-size="17" font-weight="700" letter-spacing="1.6" fill="#BD5A0E">SOLID</text>
+<text x="215" y="164" font-size="17" fill="#7C848D">steel</text>
+<rect x="100" y="404" width="560" height="16" fill="#6B7780"/>
+<g stroke="#9BA5AD" stroke-width="2">
+  <line x1="112" y1="420" x2="98" y2="440"/><line x1="152" y1="420" x2="138" y2="440"/>
+  <line x1="192" y1="420" x2="178" y2="440"/><line x1="232" y1="420" x2="218" y2="440"/>
+  <line x1="272" y1="420" x2="258" y2="440"/><line x1="312" y1="420" x2="298" y2="440"/>
+  <line x1="352" y1="420" x2="338" y2="440"/><line x1="392" y1="420" x2="378" y2="440"/>
+  <line x1="432" y1="420" x2="418" y2="440"/><line x1="472" y1="420" x2="458" y2="440"/>
+  <line x1="512" y1="420" x2="498" y2="440"/><line x1="552" y1="420" x2="538" y2="440"/>
+  <line x1="592" y1="420" x2="578" y2="440"/><line x1="632" y1="420" x2="618" y2="440"/>
+</g>
+<text x="100" y="462" font-size="15" fill="#7C848D">fixed</text>
+<rect x="160" y="244" width="380" height="160" fill="none" stroke="#7C848D" stroke-width="1.5" stroke-dasharray="6 5" opacity=".7"/>
+<polygon points="160,404 540,404 610,244 230,244" fill="#F6E7D9" stroke="#BD5A0E" stroke-width="2.5" stroke-linejoin="round"/>
+<rect x="230" y="228" width="380" height="16" fill="#6B7780"/>
+<line x1="626" y1="236" x2="706" y2="236" stroke="#BD5A0E" stroke-width="3" marker-end="url(#aS)"/>
+<text x="660" y="220" font-size="17" font-weight="600" fill="#BD5A0E">F</text>
+<path d="M 160 358 A 46 46 0 0 1 178.6 366.9" fill="none" stroke="#BD5A0E" stroke-width="2"/>
+<text x="184" y="352" font-size="19" font-style="italic" fill="#BD5A0E">&#947;</text>
+<line x1="140" y1="244" x2="140" y2="404" stroke="#7C848D" stroke-width="1.5"/>
+<line x1="132" y1="244" x2="148" y2="244" stroke="#7C848D" stroke-width="1.5"/>
+<line x1="132" y1="404" x2="148" y2="404" stroke="#7C848D" stroke-width="1.5"/>
+<text x="112" y="330" font-size="17" font-style="italic" fill="#7C848D">h</text>
+<text x="120" y="506" font-size="21" font-weight="600" fill="#15181C">Distorts to one angle &#8212; then stops.</text>
+<text x="120" y="536" font-size="17" fill="#7C848D">A static equilibrium. Release it and it springs back.</text>
+<text x="404" y="462" font-size="14" fill="#7C848D">(angle exaggerated &#8212; real &#947; at yield &#8776; 0.1&#176;)</text>
+<text x="120" y="586" font-size="30" font-style="italic" fill="#BD5A0E">&#964;  =  G &#947;</text>
+<text x="300" y="586" font-size="17" fill="#7C848D">stress &#8596; strain &#160;&#183;&#160; no time in it</text>
+
+<line x1="800" y1="140" x2="800" y2="600" stroke="#D8DCDA" stroke-width="1.5"/>
+
+<!-- ================= FLUID ================= -->
+<text x="900" y="164" font-size="17" font-weight="700" letter-spacing="1.6" fill="#0092AB">FLUID</text>
+<text x="990" y="164" font-size="17" fill="#7C848D">water</text>
+<rect x="880" y="404" width="560" height="16" fill="#6B7780"/>
+<g stroke="#9BA5AD" stroke-width="2">
+  <line x1="892" y1="420" x2="878" y2="440"/><line x1="932" y1="420" x2="918" y2="440"/>
+  <line x1="972" y1="420" x2="958" y2="440"/><line x1="1012" y1="420" x2="998" y2="440"/>
+  <line x1="1052" y1="420" x2="1038" y2="440"/><line x1="1092" y1="420" x2="1078" y2="440"/>
+  <line x1="1132" y1="420" x2="1118" y2="440"/><line x1="1172" y1="420" x2="1158" y2="440"/>
+  <line x1="1212" y1="420" x2="1198" y2="440"/><line x1="1252" y1="420" x2="1238" y2="440"/>
+  <line x1="1292" y1="420" x2="1278" y2="440"/><line x1="1332" y1="420" x2="1318" y2="440"/>
+  <line x1="1372" y1="420" x2="1358" y2="440"/><line x1="1412" y1="420" x2="1398" y2="440"/>
+</g>
+<text x="880" y="462" font-size="15" fill="#7C848D">fixed &#8212; no slip</text>
+<rect x="940" y="244" width="380" height="160" fill="#DBEFF3"/>
+<g stroke="#0092AB" stroke-width="2.25" marker-end="url(#aF)">
+  <line x1="960" y1="372" x2="974" y2="372"/>
+  <line x1="960" y1="340" x2="988" y2="340"/>
+  <line x1="960" y1="308" x2="1002" y2="308"/>
+  <line x1="960" y1="276" x2="1016" y2="276"/>
+  <line x1="960" y1="248" x2="1030" y2="248"/>
+</g>
+<line x1="960" y1="404" x2="1030" y2="244" stroke="#0092AB" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="1040" y="256" font-size="17" font-style="italic" fill="#0092AB">V</text>
+<line x1="1100" y1="404" x2="1100" y2="244" stroke="#7C848D" stroke-width="1.5" stroke-dasharray="6 5" opacity=".7"/>
+<line x1="1100" y1="404" x2="1160" y2="244" stroke="#0092AB" stroke-width="2.5" opacity=".35"/>
+<line x1="1100" y1="404" x2="1225" y2="244" stroke="#0092AB" stroke-width="2.5" opacity=".6"/>
+<line x1="1100" y1="404" x2="1295" y2="244" stroke="#0092AB" stroke-width="3"/>
+<text x="1092" y="220" font-size="15" fill="#7C848D">t&#8320;</text>
+<text x="1152" y="220" font-size="15" fill="#7C848D">t&#8321;</text>
+<text x="1217" y="220" font-size="15" fill="#7C848D">t&#8322;</text>
+<text x="1287" y="220" font-size="15" fill="#7C848D">t&#8323;</text>
+<rect x="940" y="228" width="380" height="16" fill="#6B7780"/>
+<line x1="1336" y1="236" x2="1416" y2="236" stroke="#0092AB" stroke-width="3" marker-end="url(#aF)"/>
+<text x="1370" y="220" font-size="17" font-weight="600" fill="#0092AB">F</text>
+<line x1="920" y1="244" x2="920" y2="404" stroke="#7C848D" stroke-width="1.5"/>
+<line x1="912" y1="244" x2="928" y2="244" stroke="#7C848D" stroke-width="1.5"/>
+<line x1="912" y1="404" x2="928" y2="404" stroke="#7C848D" stroke-width="1.5"/>
+<text x="892" y="330" font-size="17" font-style="italic" fill="#7C848D">h</text>
+<text x="900" y="506" font-size="21" font-weight="600" fill="#15181C">Never reaches an angle. It keeps going.</text>
+<text x="900" y="536" font-size="17" fill="#7C848D">No equilibrium. Release it and it just stays there.</text>
+<text x="900" y="586" font-size="30" font-style="italic" fill="#0092AB">&#964;  =  &#956; d&#947;/dt</text>
+<text x="1108" y="586" font-size="17" fill="#7C848D">stress &#8596; strain RATE &#160;&#183;&#160; time is the point</text>
+
+<line x1="60" y1="632" x2="1540" y2="632" stroke="#D8DCDA" stroke-width="1.5"/>
+
+<!-- ================= CHART ================= -->
+<text x="60" y="676" font-size="17" font-weight="700" letter-spacing="1.6" fill="#15181C">SAME STRESS, APPLIED THEN REMOVED</text>
+<rect x="420" y="712" width="500" height="212" fill="#F4F5F3"/>
+<line x1="420" y1="712" x2="420" y2="924" stroke="#7C848D" stroke-width="1.25" stroke-dasharray="5 4"/>
+<line x1="920" y1="712" x2="920" y2="924" stroke="#7C848D" stroke-width="1.25" stroke-dasharray="5 4"/>
+<text x="420" y="950" font-size="15" text-anchor="middle" fill="#7C848D">on</text>
+<text x="920" y="950" font-size="15" text-anchor="middle" fill="#7C848D">off</text>
+<polyline points="290,924 420,924 920,738 1400,738" fill="none" stroke="#0092AB" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="290,924 420,924 420,882 920,882 920,924 1400,924" fill="none" stroke="#BD5A0E" stroke-width="3" stroke-linejoin="round"/>
+<line class="axis" x1="290" y1="700" x2="290" y2="924" stroke="#7C848D" stroke-width="1.5"/>
+<line x1="290" y1="924" x2="1400" y2="924" stroke="#7C848D" stroke-width="1.5"/>
+<text x="272" y="930" font-size="15" text-anchor="end" fill="#7C848D">0</text>
+<text x="240" y="812" font-size="17" text-anchor="middle" fill="#15181C" transform="rotate(-90 240 812)">shear strain &#947;  <tspan font-size="14" fill="#7C848D">(shape, not scale)</tspan></text>
+<text x="845" y="960" font-size="17" fill="#15181C">time &#8594;</text>
+<text x="1108" y="726" font-size="18" font-weight="600" fill="#0092AB">fluid &#8212; stays where it stopped</text>
+<text x="1108" y="912" font-size="18" font-weight="600" fill="#BD5A0E">solid &#8212; back to zero</text>
+<text x="600" y="868" font-size="18" font-weight="600" fill="#BD5A0E">holds one angle</text>
+<text x="600" y="800" font-size="18" font-weight="600" fill="#0092AB" transform="rotate(-20.3 600 800)">keeps going</text>
+<text x="60" y="996" font-size="20" fill="#15181C">A fluid <tspan font-weight="700">cannot resist a shear stress at rest</tspan> &#8212; so it deforms without end. That unending deformation <tspan font-weight="700" fill="#0092AB">is flow</tspan>.</text>
+</svg>

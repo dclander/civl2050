@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CIVL 2050 Schedule</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Serif:wght@600&display=swap">
+<style>
+:root{
+  --paper:#faf8f4; --card:#ffffff; --ink:#191610; --ink2:#524e46; --ink3:#8a857c;
+  --rule:#e2ded7; --rule2:#cbc6bd; --hair:#f0ece5; --shadow:0 1px 2px rgba(25,22,16,.06);
+  /* STATUS palette — reserved, not the course identity accents */
+  --now:#191610;            /* this week: full ink emphasis */
+  --exam:#a7463c; --exam-tint:#f7e3df;   /* exams: the one spot colour, always w/ shape+label */
+  --done:#a9a49b;           /* past: faded */
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#16150f; --card:#1e1c16; --ink:#f2eee6; --ink2:#b8b2a6; --ink3:#847e73;
+    --rule:#2e2b23; --rule2:#403c33; --hair:#241f19; --shadow:0 1px 2px rgba(0,0,0,.5);
+    --now:#f2eee6; --exam:#e0897c; --exam-tint:#3a251f; --done:#6f6a61;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#16150f; --card:#1e1c16; --ink:#f2eee6; --ink2:#b8b2a6; --ink3:#847e73;
+  --rule:#2e2b23; --rule2:#403c33; --hair:#241f19; --shadow:0 1px 2px rgba(0,0,0,.5);
+  --now:#f2eee6; --exam:#e0897c; --exam-tint:#3a251f; --done:#6f6a61;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:'IBM Plex Sans',-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:32px 20px 60px;}
+.mono{font-family:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  font-variant-numeric:tabular-nums;}
+h1{font-family:'IBM Plex Serif',Georgia,'Times New Roman',serif;font-size:25px;font-weight:600;
+   letter-spacing:-.01em;margin:0;text-wrap:balance;}
+.sub{color:var(--ink2);font-size:13.5px;margin-top:3px;}
+.stamp{text-align:right;white-space:nowrap;}
+.stamp .d{font-size:13px;font-weight:600;letter-spacing:.05em;}
+.stamp .w{font-size:11px;color:var(--ink3);letter-spacing:.04em;margin-top:1px;}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+     padding-bottom:14px;border-bottom:2px solid var(--ink);flex-wrap:wrap;}
+h2{font-size:11.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
+   color:var(--ink2);margin:32px 0 10px;}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:6px;
+      padding:15px 17px;box-shadow:var(--shadow);}
+/* next class */
+.next{display:flex;gap:16px;align-items:center;}
+.next .badge{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:20px;font-weight:600;
+      letter-spacing:-.02em;padding:8px 12px;border-radius:5px;background:var(--hair);
+      border:1px solid var(--rule);white-space:nowrap;}
+.next .t{font-size:17px;font-weight:600;line-height:1.3;text-wrap:balance;}
+.next .m{color:var(--ink2);font-size:13px;margin-top:2px;}
+/* week blocks */
+.week{border:1px solid var(--rule);border-radius:6px;background:var(--card);
+      padding:0;overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow);}
+.week.now{border:2px solid var(--now);}
+.week.done{opacity:.72;}
+.whead{display:flex;align-items:baseline;gap:10px;padding:11px 15px;border-bottom:1px solid var(--hair);}
+.week.now .whead{background:var(--hair);}
+.wtag{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+      padding:2px 7px;border-radius:99px;white-space:nowrap;}
+.wtag.now{background:var(--now);color:var(--paper);}
+.wtag.up{background:transparent;color:var(--ink2);border:1px solid var(--rule2);}
+.wtag.done{background:transparent;color:var(--done);border:1px solid var(--rule);}
+.wrng{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:var(--ink3);}
+.wbody{padding:12px 15px;}
+.line{display:flex;gap:10px;align-items:baseline;padding:3px 0;font-size:14.5px;line-height:1.4;}
+.line .mk{flex:0 0 14px;text-align:center;color:var(--ink3);font-size:13px;margin-top:1px;}
+.line .when{color:var(--ink3);font-size:13px;white-space:nowrap;}
+.line.due .lab{font-weight:600;}
+.line.exam{color:var(--exam);font-weight:600;}
+.line.exam .mk{color:var(--exam);}
+.sect{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);
+      margin:9px 0 2px;}
+.sect:first-child{margin-top:0;}
+.quiet{color:var(--ink3);font-size:14px;padding:2px 0;}
+/* exams strip */
+.exams{display:grid;gap:10px;}
+.exam-card{display:flex;gap:14px;align-items:center;background:var(--card);
+      border:1px solid var(--rule);border-left:4px solid var(--exam);border-radius:6px;
+      padding:12px 15px;box-shadow:var(--shadow);}
+.exam-card .dia{width:12px;height:12px;background:var(--exam);transform:rotate(45deg);flex:0 0 12px;}
+.exam-card .nm{font-weight:600;flex:0 0 auto;}
+.exam-card .cov{color:var(--ink2);font-size:13.5px;flex:1 1 auto;min-width:0;}
+.exam-card .dt{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;
+      color:var(--ink);font-weight:600;white-space:nowrap;}
+.exam-card.past{opacity:.6;border-left-color:var(--done);}
+.exam-card.past .dia{background:var(--done);}
+/* progress */
+.prog{display:flex;gap:2px;height:14px;margin-top:6px;}
+.prog i{flex:1 1 0;background:var(--hair);border-radius:1px;display:block;}
+.prog i.on{background:var(--rule2);}
+.prog i.here{background:var(--now);box-shadow:0 0 0 2px var(--paper),0 0 0 3px var(--now);
+      border-radius:2px;z-index:1;}
+.proglab{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink3);
+      margin-top:6px;letter-spacing:.03em;}
+/* term-at-a-glance: compact gantt */
+.glance{border:1px solid var(--rule);border-radius:8px;background:var(--card);
+      padding:15px 16px 13px;box-shadow:var(--shadow);}
+.loadrow{display:flex;align-items:flex-end;gap:2px;height:56px;padding-left:58px;
+      margin-bottom:6px;position:relative;}
+.lcol{flex:1 1 0;display:flex;flex-direction:column-reverse;justify-content:flex-start;
+      height:100%;min-width:0;border-radius:2px 2px 0 0;overflow:hidden;}
+.lseg{display:block;width:100%;}
+.lcol.past{opacity:.5;}
+.lcol.here{outline:2px solid var(--now);outline-offset:1px;border-radius:2px;}
+.gantt{position:relative;}
+.glane{display:flex;align-items:center;min-height:16px;}
+.glane .gl-lab{flex:0 0 58px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+      color:var(--ink3);white-space:nowrap;}
+.glane .gl-track{position:relative;flex:1 1 auto;height:100%;min-width:0;}
+.gbar{position:absolute;height:8px;border-radius:2px 4px 4px 2px;background:var(--ink2);
+      box-shadow:0 0 0 1px var(--card);}
+.gbar.faint{background:var(--rule2);}
+.gdot{position:absolute;top:7px;width:7px;height:7px;border-radius:50%;background:var(--ink2);
+      transform:translateX(-50%);}
+.gdia{position:absolute;top:5px;width:11px;height:11px;background:var(--exam);
+      transform:translateX(-50%) rotate(45deg);}
+.gdia.hollow{background:var(--card);border:1.5px solid var(--exam);}
+.gcov{position:absolute;top:8px;height:4px;border-radius:2px;background:var(--exam-tint);
+      border:1px solid var(--exam);opacity:.5;}
+.gpast{position:absolute;top:0;bottom:0;left:0;background:var(--paper);opacity:.5;
+      pointer-events:none;border-right:0;}
+.gnow{position:absolute;top:-3px;bottom:2px;width:2px;background:var(--now);z-index:3;}
+.gnow::after{content:'';position:absolute;top:-4px;left:-3px;border-left:4px solid transparent;
+      border-right:4px solid transparent;border-top:5px solid var(--now);}
+.gaxis{display:flex;margin-top:5px;padding-left:58px;position:relative;height:14px;}
+.gaxis .gm{position:absolute;font-size:10px;color:var(--ink3);letter-spacing:.02em;
+      border-left:1px solid var(--hair);padding-left:3px;white-space:nowrap;}
+.glegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:11px;font-size:11.5px;
+      color:var(--ink2);align-items:center;}
+.glegend .sw{display:inline-block;width:16px;height:8px;border-radius:2px;
+      background:var(--ink2);vertical-align:0;margin-right:5px;}
+.glegend .dia{display:inline-block;width:8px;height:8px;background:var(--exam);
+      transform:rotate(45deg);margin:0 6px 0 2px;vertical-align:0;}
+.hint{font-size:11.5px;color:var(--ink3);margin-top:9px;line-height:1.45;}
+footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);
+      font-size:11px;color:var(--ink3);letter-spacing:.02em;text-align:center;}
+a{color:var(--ink);text-underline-offset:2px;}
+@media (max-width:480px){ .next{flex-direction:column;align-items:flex-start;gap:10px;}
+      .wrap{padding:22px 15px 44px;} h1{font-size:22px;} }
+</style></head>
+<body><div class="wrap">
+  <div class="top">
+    <div><h1>CIVL 2050 &middot; Fluid Mechanics</h1>
+      <div class="sub">Fall 2026 &middot; Carnegie Building 113 &middot; your week at a glance</div></div>
+    <div class="stamp" id="stamp"></div>
+  </div>
+
+  <h2>Your next class</h2>
+  <div id="next"></div>
+
+  <h2>This week &amp; next</h2>
+  <div id="weeks"></div>
+
+  <h2>The whole term</h2>
+  <div class="glance">
+    <div class="loadrow" id="loadrow"></div>
+    <div class="gantt" id="gantt"></div>
+    <div class="gaxis" id="gaxis"></div>
+    <div class="glegend" id="glegend"></div>
+    <div class="hint">A rough <b>relative</b> estimate of effort (a lab report is worth roughly 3 homeworks), not a count of hours. Bars show how heavy each week is; the rows below show when each assignment runs and where exams fall.</div>
+  </div>
+
+  <footer><div id="finalnote"></div>This page updates itself from today&rsquo;s date.
+  Dates are the source of truth; if something here disagrees with an announcement, ask your instructor.</footer>
+</div>
+<script>const DATA = {"course":{"code":"CIVL 2050","title":"Fluid Mechanics","term":"Fall 2026","room":"Carnegie Building 113"},"term":{"start":"2026-08-24","end":"2026-12-22","first":"2026-08-27","last":"2026-12-11"},"turnaround":7,"meeting_hours":0.5,"enrollment":85,"kinds":{"homework":{"label":"Homework","deadline":true,"effort":4.0,"student_hours":1.0,"solid":"#9d5300","deep":"#713500","mid":"#e2b38d","tint":"#fde9d9"},"prelab":{"label":"Pre-lab","deadline":true,"effort":1.0,"student_hours":0.5,"solid":"#007f56","deep":"#005938","mid":"#90ceb2","tint":"#dbf4e8"},"session":{"label":"Lab session","deadline":false,"effort":0.0,"student_hours":1.0,"solid":"#007f56","deep":"#005938","mid":"#90ceb2","tint":"#dbf4e8"},"report":{"label":"Lab report","deadline":true,"effort":18.0,"student_hours":3.0,"solid":"#007f56","deep":"#005938","mid":"#90ceb2","tint":"#dbf4e8"},"exam":{"label":"Exam","deadline":true,"effort":6.0,"student_hours":0.0,"solid":"#a7463c","deep":"#782a24","mid":"#eaaca3","tint":"#ffe6e2"},"coverage":{"label":"Exam coverage","deadline":false,"effort":0.0,"student_hours":0.0,"solid":"#a7463c","deep":"#782a24","mid":"#eaaca3","tint":"#ffe6e2"},"emphasis":{"label":"Final emphasis","deadline":false,"effort":0.0,"student_hours":0.0,"solid":"#a7463c","deep":"#782a24","mid":"#eaaca3","tint":"#ffe6e2"}},"meetings":[{"no":1,"date":"2026-08-27","type":"lecture","short":"C01","label":"Class 01","topic":"Introduction and overview; units; fluid properties","reading":"1.1-1.10","note":"First class of the term"},{"no":2,"date":"2026-08-31","type":"lecture","short":"C02","label":"Class 02","topic":"Pressure; manometry","reading":"2.2-2.3","note":""},{"no":3,"date":"2026-09-03","type":"lecture","short":"C03","label":"Class 03","topic":"Forces on plane surfaces","reading":"2.4","note":""},{"no":4,"date":"2026-09-10","type":"lecture","short":"C04","label":"Class 04","topic":"Forces on curved surfaces; buoyancy","reading":"2.5-2.6","note":"Follows Monday schedule"},{"no":5,"date":"2026-09-14","type":"lecture","short":"C05","label":"Class 05","topic":"Classifications of flows; systems and control volume; fluid kinematics","reading":"3.1, 3.2, 4.1","note":""},{"no":6,"date":"2026-09-17","type":"lecture","short":"C06","label":"Class 06","topic":"Reynolds transport theorem; conservation of mass","reading":"4.1-4.3","note":""},{"no":7,"date":"2026-09-21","type":"lecture","short":"C07","label":"Class 07","topic":"The Bernoulli equation (conservation of energy)","reading":"3.3","note":""},{"no":8,"date":"2026-09-24","type":"review","short":"C08","label":"Class 08","topic":"Exam 1 review","reading":"course notes","note":"No new exam content"},{"no":9,"date":"2026-09-28","type":"exam","short":"C09","label":"Class 09","topic":"Exam 1","reading":"-","note":"Covers lectures 1-8"},{"no":10,"date":"2026-10-01","type":"lecture","short":"C10","label":"Class 10","topic":"Estimation of uncertainty and lab reports","reading":"course notes","note":"Placed immediately after Exam 1"},{"no":11,"date":"2026-10-05","type":"lecture","short":"C11","label":"Class 11","topic":"Exam 1 solutions; flow measurement","reading":"3.4","note":"Lab 1 runs this week"},{"no":12,"date":"2026-10-08","type":"lecture","short":"C12","label":"Class 12","topic":"Conservation of linear momentum","reading":"4.4","note":"Lab 1 runs this week"},{"no":13,"date":"2026-10-15","type":"lecture","short":"C13","label":"Class 13","topic":"Dimensional analysis","reading":"6.1-6.5","note":""},{"no":14,"date":"2026-10-16","type":"lecture","short":"C14","label":"Class 14","topic":"Similitude","reading":"6.6","note":"Follows Monday schedule"},{"no":15,"date":"2026-10-19","type":"lecture","short":"C15","label":"Class 15","topic":"Viscosity; laminar flow in pipes","reading":"1.6, 7.1-7.3","note":"Lab 2 runs this week"},{"no":16,"date":"2026-10-22","type":"lecture","short":"C16","label":"Class 16","topic":"Turbulent flow in pipes","reading":"7.4","note":"Lab 2 runs this week"},{"no":17,"date":"2026-10-26","type":"lecture","short":"C17","label":"Class 17","topic":"Steady-flow energy equation and minor losses","reading":"course notes, 7.5.6","note":""},{"no":18,"date":"2026-10-29","type":"lecture","short":"C18","label":"Class 18","topic":"Single-pipe flow problems","reading":"7.5.1-7.5.4","note":""},{"no":19,"date":"2026-11-02","type":"lecture","short":"C19","label":"Class 19","topic":"Multiple-pipe problems","reading":"course notes","note":""},{"no":20,"date":"2026-11-05","type":"lecture","short":"C20","label":"Class 20","topic":"Pump performance","reading":"8.3.1-8.3.3, 8.3.5-8.3.6","note":""},{"no":21,"date":"2026-11-09","type":"lecture","short":"C21","label":"Class 21","topic":"Boundary layers and drag","reading":"10.1, 10.2, 10.3.1, 10.3.5-10.3.7","note":"Lab 3 runs this week"},{"no":22,"date":"2026-11-12","type":"lecture","short":"C22","label":"Class 22","topic":"Flow over circular cylinders and spheres","reading":"10.3.2","note":"Movable after Thanksgiving if needed"},{"no":23,"date":"2026-11-16","type":"review","short":"C23","label":"Class 23","topic":"Exam 2 review","reading":"course notes","note":"No new exam content"},{"no":24,"date":"2026-11-19","type":"exam","short":"C24","label":"Class 24","topic":"Exam 2","reading":"-","note":"Covers lectures 9-21; before Thanksgiving"},{"no":25,"date":"2026-11-30","type":"lecture","short":"C25","label":"Class 25","topic":"Exam 2 solutions; hydraulic turbines and hydropower","reading":"8.5","note":""},{"no":26,"date":"2026-12-03","type":"lecture","short":"C26","label":"Class 26","topic":"Hydraulic turbines and hydropower","reading":"8.5","note":""},{"no":27,"date":"2026-12-07","type":"lecture","short":"C27","label":"Class 27","topic":"Final exam review","reading":"course notes","note":""},{"no":28,"date":"2026-12-10","type":"contingency","short":"C28","label":"Class 28","topic":"Optional contingency / no new required content","reading":"-","note":"Not counted by default"}],"items":[{"id":"HW1","kind":"homework","label":"HW1","start":"2026-08-27","due":"2026-09-09","span":true,"note":"Default Wednesday due date","anchor":"C01-C02"},{"id":"HW2","kind":"homework","label":"HW2","start":"2026-09-03","due":"2026-09-16","span":true,"note":"Default Wednesday due date","anchor":"C03-C04"},{"id":"HW3","kind":"homework","label":"HW3","start":"2026-09-14","due":"2026-09-23","span":true,"note":"Due before review/exam week pressure peaks","anchor":"C05-C06"},{"id":"HW4","kind":"homework","label":"HW4","start":"2026-09-17","due":"2026-09-25","span":true,"note":"Exam-squeeze exception before Monday Exam 1","anchor":"C07-C08"},{"id":"HW5","kind":"homework","label":"HW5","start":"2026-10-05","due":"2026-10-14","span":true,"note":"Default Wednesday due date","anchor":"C11-C12"},{"id":"HW6","kind":"homework","label":"HW6","start":"2026-10-15","due":"2026-10-21","span":true,"note":"Default Wednesday due date","anchor":"C13-C14"},{"id":"HW7","kind":"homework","label":"HW7","start":"2026-10-19","due":"2026-10-28","span":true,"note":"Default Wednesday due date","anchor":"C15-C16"},{"id":"HW8","kind":"homework","label":"HW8","start":"2026-10-26","due":"2026-11-11","span":true,"note":"Default Wednesday due date; before Exam 2","anchor":"C17-C19"},{"id":"HW9","kind":"homework","label":"HW9","start":"2026-11-05","due":"2026-11-16","span":true,"note":"Exam-squeeze exception before Thursday Exam 2","anchor":"C20-C22"},{"id":"HW10","kind":"homework","label":"HW10","start":"2026-11-30","due":"2026-12-09","span":true,"note":"Default Wednesday due date; not drop-eligible","anchor":"C25-C26"},{"id":"PL1-01","kind":"prelab","label":"PL1 01","start":"2026-10-05","due":"2026-10-05","span":false,"note":"night before the Tue lab","anchor":""},{"id":"PL1-0203","kind":"prelab","label":"PL1 02\u00b703","start":"2026-10-06","due":"2026-10-06","span":false,"note":"night before the Wed lab","anchor":""},{"id":"LAB1-01","kind":"session","label":"Lab1 01","start":"2026-10-06","due":"2026-10-06","span":false,"note":"Flow meters","anchor":""},{"id":"LAB1-0203","kind":"session","label":"Lab1 02\u00b703","start":"2026-10-07","due":"2026-10-07","span":false,"note":"Flow meters","anchor":""},{"id":"R1","kind":"report","label":"Lab 1 report","start":"2026-10-07","due":"2026-10-18","span":true,"note":"Flow meters","anchor":""},{"id":"PL2-01","kind":"prelab","label":"PL2 01","start":"2026-10-19","due":"2026-10-19","span":false,"note":"night before the Tue lab","anchor":""},{"id":"PL2-0203","kind":"prelab","label":"PL2 02\u00b703","start":"2026-10-20","due":"2026-10-20","span":false,"note":"night before the Wed lab","anchor":""},{"id":"LAB2-01","kind":"session","label":"Lab2 01","start":"2026-10-20","due":"2026-10-20","span":false,"note":"Impact of a jet","anchor":""},{"id":"LAB2-0203","kind":"session","label":"Lab2 02\u00b703","start":"2026-10-21","due":"2026-10-21","span":false,"note":"Impact of a jet","anchor":""},{"id":"R2","kind":"report","label":"Lab 2 report","start":"2026-10-21","due":"2026-11-01","span":true,"note":"Impact of a jet","anchor":""},{"id":"PL3-01","kind":"prelab","label":"PL3 01","start":"2026-11-09","due":"2026-11-09","span":false,"note":"night before the Tue lab","anchor":""},{"id":"PL3-0203","kind":"prelab","label":"PL3 02\u00b703","start":"2026-11-10","due":"2026-11-10","span":false,"note":"night before the Wed lab","anchor":""},{"id":"LAB3-01","kind":"session","label":"Lab3 01","start":"2026-11-10","due":"2026-11-10","span":false,"note":"Energy loss in pipes + Osborne Reynolds","anchor":""},{"id":"LAB3-0203","kind":"session","label":"Lab3 02\u00b703","start":"2026-11-11","due":"2026-11-11","span":false,"note":"Energy loss in pipes + Osborne Reynolds","anchor":""},{"id":"R3","kind":"report","label":"Lab 3 report","start":"2026-11-11","due":"2026-12-06","span":true,"note":"Energy loss in pipes + Osborne Reynolds","anchor":""},{"id":"Exam1","kind":"exam","label":"Exam 1","start":"2026-09-28","due":"2026-09-28","span":false,"note":"one single-sided crib sheet","anchor":"C01-C08"},{"id":"Exam1-COV","kind":"coverage","label":"Exam 1 coverage","start":"2026-08-27","due":"2026-09-24","span":true,"note":"one single-sided crib sheet","anchor":"C01-C08"},{"id":"Exam2","kind":"exam","label":"Exam 2","start":"2026-11-19","due":"2026-11-19","span":false,"note":"two single-sided crib sheets","anchor":"C10-C23"},{"id":"Exam2-COV","kind":"coverage","label":"Exam 2 coverage","start":"2026-10-01","due":"2026-11-16","span":true,"note":"two single-sided crib sheets","anchor":"C10-C23"},{"id":"Final-COV","kind":"coverage","label":"Final Exam coverage","start":"2026-08-27","due":"2026-12-07","span":true,"note":"cumulative; weighted toward post-Exam-2 content (C25-C26)","anchor":"C01-C27"},{"id":"Final-EMPH","kind":"emphasis","label":"emphasis","start":"2026-11-30","due":"2026-12-03","span":true,"note":"","anchor":""}],"offdays":[{"date":"2026-09-07","status":"no_class","label":"Labor Day"},{"date":"2026-09-10","status":"makeup","label":"Follows a Monday schedule"},{"date":"2026-10-12","status":"no_class","label":"Columbus Day / Fall Break"},{"date":"2026-10-16","status":"makeup","label":"Follows a Monday schedule"},{"date":"2026-11-23","status":"break","label":"Thanksgiving Break"},{"date":"2026-11-24","status":"break","label":"Thanksgiving Break"},{"date":"2026-11-25","status":"break","label":"Thanksgiving Break"},{"date":"2026-11-26","status":"break","label":"Thanksgiving Break"},{"date":"2026-11-27","status":"break","label":"Thanksgiving Break"},{"date":"2026-12-12","status":"study","label":"Study period"},{"date":"2026-12-13","status":"study","label":"Study period"},{"date":"2026-12-14","status":"study","label":"Study period"},{"date":"2026-12-15","status":"study","label":"Study period"},{"date":"2026-12-16","status":"finals","label":"Final exam period"},{"date":"2026-12-17","status":"finals","label":"Final exam period"},{"date":"2026-12-18","status":"finals","label":"Final exam period"},{"date":"2026-12-19","status":"finals","label":"Final exam period"},{"date":"2026-12-20","status":"finals","label":"Final exam period"},{"date":"2026-12-21","status":"finals","label":"Final exam period"},{"date":"2026-12-22","status":"finals","label":"Final exam period"}],"weeks":[{"n":1,"start":"2026-08-24","end":"2026-08-30"},{"n":2,"start":"2026-08-31","end":"2026-09-06"},{"n":3,"start":"2026-09-07","end":"2026-09-13"},{"n":4,"start":"2026-09-14","end":"2026-09-20"},{"n":5,"start":"2026-09-21","end":"2026-09-27"},{"n":6,"start":"2026-09-28","end":"2026-10-04"},{"n":7,"start":"2026-10-05","end":"2026-10-11"},{"n":8,"start":"2026-10-12","end":"2026-10-18"},{"n":9,"start":"2026-10-19","end":"2026-10-25"},{"n":10,"start":"2026-10-26","end":"2026-11-01"},{"n":11,"start":"2026-11-02","end":"2026-11-08"},{"n":12,"start":"2026-11-09","end":"2026-11-15"},{"n":13,"start":"2026-11-16","end":"2026-11-22"},{"n":14,"start":"2026-11-23","end":"2026-11-29"},{"n":15,"start":"2026-11-30","end":"2026-12-06"},{"n":16,"start":"2026-12-07","end":"2026-12-13"},{"n":17,"start":"2026-12-14","end":"2026-12-20"},{"n":18,"start":"2026-12-21","end":"2026-12-27"}]};</script>
+<script>
+const D = DATA, day = 864e5;
+const iso = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
+const now = (() => { const n = new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })();
+const fmt = d => d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+const fmtd = d => d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+const days = (a,b) => Math.round((b-a)/day);
+const esc = s => String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const K = k => D.kinds[k] || {label:k, deadline:true};
+
+const meetings = D.meetings.map(m => ({...m, d: iso(m.date)}));
+const items    = D.items.map(i => ({...i, s: iso(i.start), e: iso(i.due)}));
+const weeks    = D.weeks.map(w => ({...w, s: iso(w.start), e: iso(w.end)}));
+const termS = iso(D.term.start), termE = iso(D.term.end);
+const lastClass = iso(D.term.last || D.term.end);
+const teachWeeks = weeks.filter(w => w.s <= lastClass);
+const curWeek = weeks.find(w => now >= w.s && now <= w.e);
+const nextMeeting = meetings.find(m => m.d >= now);
+
+/* student deadlines only: things a student submits or sits (exclude coverage/emphasis bands) */
+const isStudentDue = i => K(i.kind).deadline;
+
+function weekBlock(w, state){
+  const mt = meetings.filter(m => m.d >= w.s && m.d <= w.e && m.type !== 'exam');
+  const ex = items.filter(i => i.kind === 'exam' && i.e >= w.s && i.e <= w.e).sort((a,b)=>a.e-b.e);
+  const du = items.filter(i => isStudentDue(i) && i.kind !== 'exam' && i.e >= w.s && i.e <= w.e)
+                  .sort((a,b) => a.e - b.e);
+  const tag = state==='now' ? '<span class="wtag now">This week</span>'
+            : state==='done' ? '<span class="wtag done">Done</span>'
+            : '<span class="wtag up">Upcoming</span>';
+  const examLines = ex.length ? ex.map(e => `
+      <div class="line exam"><span class="mk">◆</span>
+        <span class="lab">${esc(e.label)}${e.anchor?`<span class="when"> · covers ${esc((e.anchor||'').replace(/-/g,'–'))}</span>`:''}</span>
+        <span class="when">${fmt(e.e)}</span></div>`).join('') : '';
+  const classes = mt.length ? '<div class="sect">In class</div>' + mt.map(m => `
+      <div class="line"><span class="mk">•</span>
+        <span><b class="mono">${esc(m.short)}</b> ${esc(m.topic)||esc(m.label)}
+        ${m.reading?`<span class="when"> · ${esc(m.reading)}</span>`:''}</span>
+        <span class="when">${fmtd(m.d)}</span></div>`).join('') : '';
+  const dues = du.length ? '<div class="sect">Due from you</div>' + du.map(i => `
+      <div class="line due"><span class="mk" style="color:${K(i.kind).solid||'var(--ink3)'}">▸</span>
+        <span class="lab">${esc(i.label)}${i.note?`<span class="when"> · ${esc(i.note)}</span>`:''}</span>
+        <span class="when">${fmt(i.e)}</span></div>`).join('') : '';
+  const off = (D.offdays||[]).filter(o => { const d=iso(o.date);
+      return d>=w.s && d<=w.e && o.status!=='makeup'; });
+  const breakNote = off.length ? `<div class="line"><span class="mk">–</span>
+      <span class="lab" style="font-weight:400;color:var(--ink2)">${esc(off[0].label)}</span></div>` : '';
+  const empty = (!mt.length && !du.length && !ex.length && !off.length)
+      ? '<div class="quiet">No class or deadlines this week.</div>' : '';
+  return `<div class="week ${state}">
+    <div class="whead">${tag}<span class="wrng">Week ${w.n} · ${fmtd(w.s)}–${fmtd(w.e)}</span></div>
+    <div class="wbody">${examLines}${classes}${dues}${breakNote}${empty}</div></div>`;
+}
+
+
+/* ---- header ---- */
+const stampD = now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+let pos;
+if (now < termS) pos = 'Term starts soon';
+else if (now > lastClass) pos = 'Classes complete';
+else pos = `Week ${curWeek?curWeek.n:'–'} of ${teachWeeks.length}`;
+document.getElementById('stamp').innerHTML =
+  `<div class="d mono">${esc(stampD)}</div><div class="w mono">${pos}</div>`;
+
+/* ---- next class ---- */
+document.getElementById('next').innerHTML = nextMeeting
+  ? `<div class="card next"><div class="badge">${esc(nextMeeting.short)}</div>
+       <div><div class="t">${esc(nextMeeting.topic)||esc(nextMeeting.label)}</div>
+       <div class="m mono">${fmt(nextMeeting.d)}${
+         days(now,nextMeeting.d)===0?' · today':days(now,nextMeeting.d)===1?' · tomorrow':
+         ` · in ${days(now,nextMeeting.d)} days`}${
+         nextMeeting.reading?' · reading '+esc(nextMeeting.reading):''}</div></div></div>`
+  : `<div class="card quiet">No classes remaining this term.</div>`;
+
+/* ---- this week + next two ---- */
+const anchor = curWeek || weeks.find(w => w.e >= now) || weeks[0];
+document.getElementById('weeks').innerHTML =
+  [[0,'now'],[1,'up'],[2,'up']].map(([o,st]) => {
+    const w = weeks.find(x => x.n === anchor.n + o);
+    return w ? weekBlock(w, st) : ''; }).join('');
+
+/* ---- the whole term: weekly load + compact gantt ---- */
+const pct = d => Math.max(0, Math.min(100, (d - termS)/(termE - termS)*100));
+const nowPct = pct(now);
+const ROW = 11;
+const HWC = (K('homework').solid) || 'var(--ink2)';
+const LABC = (K('report').solid) || 'var(--ink3)';
+const CONTACTC = 'var(--rule2)';
+const MH = D.meeting_hours || 1.83;
+
+/* weekly relative load (relative weights, no hours shown) */
+const wl = teachWeeks.map(w => {
+  const mtgs = meetings.filter(m => m.d>=w.s && m.d<=w.e && ['lecture','review','exam'].includes(m.type)).length;
+  let contact = mtgs * MH;            // lectures / reviews / exam sittings only
+  let hw=0, lab=0;
+  if (items.some(i => i.kind==='session' && i.s>=w.s && i.s<=w.e)) lab += (K('session').student_hours||0);
+  for (const i of items){
+    if (!isStudentDue(i) || i.e<w.s || i.e>w.e) continue;
+    const sh = K(i.kind).student_hours||0;
+    if (i.kind==='homework') hw+=sh; else if (i.kind==='report'||i.kind==='prelab') lab+=sh;
+  }
+  return {w, contact, hw, lab, total: contact+hw+lab};
+});
+const maxL = Math.max(...wl.map(x=>x.total), 1);
+document.getElementById('loadrow').innerHTML = wl.map(x => {
+  const past = now>x.w.e, here = curWeek && x.w.n===curWeek.n;
+  const h = (x.total/maxL*100).toFixed(1);
+  const seg = (v,c) => v>0 ? `<span class="lseg" style="height:${(v/x.total*100).toFixed(1)}%;background:${c}"></span>` : '';
+  return `<div class="lcol ${past?'past':''} ${here?'here':''}" title="Week ${x.w.n}"
+      style="height:${h}%">${seg(x.contact,CONTACTC)}${seg(x.hw,HWC)}${seg(x.lab,LABC)}</div>`;
+}).join('');
+
+/* gantt: homework + labs only, coloured */
+function pack(list){ const ends=[],rows=new Map();
+  list.slice().sort((a,b)=>a.s-b.s||a.e-b.e).forEach(it=>{
+    let r=ends.findIndex(e=>e<=it.s); if(r===-1){r=ends.length;ends.push(it.e);}else ends[r]=it.e;
+    rows.set(it.id,r); }); return {rows,n:Math.max(1,ends.length)}; }
+function barsFor(list, pk, colour){
+  return list.map(i=>{ const l=pct(i.s),r=pct(i.e),top=3+pk.rows.get(i.id)*ROW;
+    return `<div class="gbar" title="${(i.label||'').replace(/"/g,'')} · due ${fmtd(i.e)}"
+      style="left:${l}%;width:${Math.max(1.2,(r-l)).toFixed(2)}%;top:${top}px;background:${colour}"></div>`;
+  }).join(''); }
+const hw=items.filter(i=>i.kind==='homework'), labs=items.filter(i=>i.kind==='report');
+const exPts=items.filter(i=>i.kind==='exam').sort((a,b)=>a.e-b.e);
+const finalCov=D.items.find(i=>/final/i.test(i.id||'') && i.kind==='coverage');
+const pkHw=pack(hw), pkLab=pack(labs);
+const shade = `<div class="gpast" style="width:${nowPct}%"></div>`;
+const examMarks = exPts.map(e=>`<div class="gdia" title="${(e.label||'').replace(/"/g,'')} · ${fmtd(e.e)}" style="left:${pct(e.e)}%;top:4px"></div>`).join('')
+  + (finalCov?`<div class="gdia hollow" title="Final exam · Dec, TBA" style="left:${pct(iso(finalCov.due))}%;top:4px"></div>`:'');
+const lanes = [
+  ['Homework', pkHw.n*ROW+4,  shade + barsFor(hw, pkHw, HWC)],
+  ['Labs',     pkLab.n*ROW+4, shade + barsFor(labs, pkLab, LABC)],
+  ['Exams',    18,            shade + examMarks],
+];
+document.getElementById('gantt').innerHTML =
+  lanes.map(([lab,h,inner]) =>
+    `<div class="glane" style="height:${h}px"><span class="gl-lab">${lab}</span>
+       <div class="gl-track" style="height:${h}px">${inner}</div></div>`).join('') +
+  ((now>=termS && now<=termE) ? `<div class="gnow" style="left:calc(58px + (100% - 58px) * ${nowPct/100})"></div>` : '');
+
+/* month axis */
+const months=[]; let cur=new Date(termS.getFullYear(),termS.getMonth(),1);
+while(cur<=termE){ if(cur>=termS) months.push(new Date(cur)); cur=new Date(cur.getFullYear(),cur.getMonth()+1,1); }
+document.getElementById('gaxis').innerHTML = months.map(mo =>
+  `<span class="gm" style="left:${pct(mo<termS?termS:mo)}%">${mo.toLocaleDateString(undefined,{month:'short'})}</span>`).join('');
+
+/* legend (colours from data) */
+document.getElementById('glegend').innerHTML =
+  `<span><span class="sw" style="background:${HWC}"></span>homework</span>`+
+  `<span><span class="sw" style="background:${LABC}"></span>labs</span>`+
+  `<span><span class="sw" style="background:${CONTACTC}"></span>class time</span>`+
+  `<span><span class="dia"></span>exam</span>`+
+  `<span style="color:var(--ink3)">bars = weekly effort &middot; outlined = this week &middot; shaded = done</span>`;
+
+/* final-exam note (TBA, can't sit in a week) */
+const finalItem = D.items.find(i => /final/i.test(i.id||''));
+if (finalItem)
+  document.getElementById('finalnote').innerHTML =
+    `<b>Final exam:</b> Dec 16&ndash;22, date set by the Registrar &middot; cumulative. `;
+</script>
+</body></html>

@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where the Force Acts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,600&display=swap">
+<style>
+:root{
+  --bg:#F5F6F4; --surface:#FFFFFF; --surface-2:#EEF0EE;
+  --ink:#15181C; --ink-2:#4E565F; --ink-3:#7C848D;
+  --rule:#D8DCDA; --grid:#E6E9E7;
+  --cp:#BD5A0E; --cp-soft:#F6E7D9;
+  --fluid:#0092AB; --fluid-soft:#DBEFF3;
+  --plate:#4E565F;
+  --shadow:0 1px 2px rgba(20,24,28,.05),0 10px 26px -16px rgba(20,24,28,.3);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171A; --surface:#1C2126; --surface-2:#242A30;
+  --ink:#E9ECEE; --ink-2:#A7B0B8; --ink-3:#78828B;
+  --rule:#2C3339; --grid:#252C32;
+  --cp:#D9762E; --cp-soft:#38240F;
+  --fluid:#12A2BA; --fluid-soft:#0F2E37;
+  --plate:#A7B0B8;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px -18px rgba(0,0,0,.8);
+}}
+:root[data-theme="dark"]{
+  --bg:#14171A; --surface:#1C2126; --surface-2:#242A30;
+  --ink:#E9ECEE; --ink-2:#A7B0B8; --ink-3:#78828B;
+  --rule:#2C3339; --grid:#252C32;
+  --cp:#D9762E; --cp-soft:#38240F;
+  --fluid:#12A2BA; --fluid-soft:#0F2E37;
+  --plate:#A7B0B8;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px -18px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3,.eyebrow{font-family:Archivo,"IBM Plex Sans",system-ui,sans-serif}
+.v{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-weight:600}
+header.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--rule);padding:14px 0 13px}
+.top-in,.wrap{max-width:1220px;margin:0 auto;padding-left:24px;padding-right:24px}
+.top-in{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.coursetag{font-family:Archivo,sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.top-title{font-family:Archivo,sans-serif;font-weight:600;font-size:15px;margin:0;color:var(--ink-2)}
+.spacer{flex:1}
+.tbtn{font:inherit;font-size:13px;background:none;border:1px solid var(--rule);color:var(--ink-2);border-radius:999px;padding:4px 13px;cursor:pointer}
+.tbtn:hover{color:var(--ink);border-color:var(--ink-3)}
+.wrap{padding-top:30px;padding-bottom:64px}
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3);margin:0 0 9px}
+h2{font-size:clamp(26px,3.3vw,37px);line-height:1.09;letter-spacing:-.022em;margin:0 0 12px;text-wrap:balance;font-weight:700}
+.lede{font-size:17px;color:var(--ink-2);max-width:66ch;margin:0 0 26px}
+.lede strong{color:var(--ink);font-weight:600}
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:980px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px;box-shadow:var(--shadow)}
+.card+.card{margin-top:20px}
+.card h3{font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:0 0 14px}
+figure{margin:0}
+figcaption{font-size:13px;color:var(--ink-3);margin-top:11px;line-height:1.45}
+svg{display:block;max-width:100%;height:auto}
+.ctrls{display:grid;gap:15px;margin-top:18px;padding-top:16px;border-top:1px solid var(--rule)}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:end}
+.slider-row{flex:1;min-width:200px}
+.slider-row label{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-2);margin-bottom:5px}
+.slider-row label b{font-weight:500;font-variant-numeric:tabular-nums;color:var(--fluid)}
+input[type=range]{width:100%;accent-color:var(--fluid);height:22px;margin:0;display:block}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;padding:7px 12px;background:var(--surface);color:var(--ink-2);border:0;cursor:pointer;border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:hover:not([aria-pressed="true"]){color:var(--ink)}
+.fieldlab{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin:0 0 6px}
+.btn{font:inherit;font-size:13.5px;font-weight:500;padding:7px 14px;border-radius:7px;cursor:pointer;border:1px solid var(--rule);background:var(--surface-2);color:var(--ink)}
+.btn:hover{border-color:var(--ink-3)}
+.btn:disabled{opacity:.4;cursor:default}
+.chk{display:inline-flex;align-items:center;gap:9px;font-size:14px;color:var(--ink-2);cursor:pointer;user-select:none}
+.chk input{accent-color:var(--fluid);width:17px;height:17px;margin:0}
+.btn:focus-visible,.tbtn:focus-visible,input:focus-visible,.seg button:focus-visible{outline:2px solid var(--fluid);outline-offset:2px}
+table.props{width:100%;border-collapse:collapse;font-size:14px}
+table.props td{padding:7px 0;border-bottom:1px solid var(--grid);vertical-align:baseline}
+table.props tr:last-child td{border-bottom:0}
+table.props td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+table.props td small{color:var(--ink-3);font-weight:400;font-size:12px}
+.hero{background:var(--cp-soft);border:1px solid var(--cp);border-radius:9px;padding:14px 16px;margin-top:4px}
+.hero .lab{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);margin:0 0 3px}
+.hero .val{font-size:30px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--cp);line-height:1.1}
+.hero .val small{font-size:14px;font-weight:400}
+.hero .sub{font-size:13px;color:var(--ink-2);margin:6px 0 0}
+.eqbox{border-left:3px solid var(--cp);padding:2px 0 2px 15px;margin:18px 0 0}
+.eq{font-size:23px;display:block;margin-bottom:6px;line-height:1.3}
+.eq .op{color:var(--ink-3);padding:0 .14em}
+.eqnote{font-size:13.5px;color:var(--ink-2);margin:0}
+.note{font-size:13.5px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;margin-top:14px}
+.note b{color:var(--ink)}
+.note.hot{background:var(--fluid-soft);border-color:var(--fluid)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-bottom:10px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.axlab{fill:var(--ink-3);font-family:"IBM Plex Sans",sans-serif;font-size:11.5px}
+.dimtext{fill:var(--ink-2);font-family:"IBM Plex Sans",sans-serif;font-size:12px}
+.mark{font-family:Archivo,sans-serif;font-size:13px;font-weight:700}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <span class="coursetag">CIVL 2050 &middot; Fluid Mechanics</span>
+  <p class="top-title">Forces on submerged plane surfaces</p>
+  <span class="spacer"></span>
+  <button class="tbtn" id="themeBtn" type="button">Theme</button>
+</div></header>
+
+<main class="wrap">
+  <p class="eyebrow">Centre of pressure</p>
+  <h2>The force does not act at the centroid.</h2>
+  <p class="lede">Pressure grows with depth, so the lower half of a plate is pushed harder than the upper half. The resultant therefore acts <strong>below</strong> the centroid &mdash; at the centre of pressure. How far below is the whole question.</p>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <div class="legend">
+          <span><i class="dot" style="background:var(--fluid)"></i> pressure on the plate</span>
+          <span><i class="dot" style="background:var(--ink-3)"></i> <b style="font-weight:600">C</b> &mdash; centroid of area</span>
+          <span><i class="dot" style="background:var(--cp)"></i> <b style="font-weight:600">CP</b> &mdash; centre of pressure</span>
+        </div>
+        <figure>
+          <svg id="scene" viewBox="0 0 620 480" role="img" aria-label="A plane surface submerged at an angle below a free surface, with the pressure distribution drawn as arrows, and the centroid and centre of pressure marked on the plate."></svg>
+          <figcaption id="cap"></figcaption>
+        </figure>
+
+        <div class="ctrls">
+          <div class="row">
+            <div>
+              <p class="fieldlab">Shape <span style="text-transform:none;letter-spacing:0">(all 3.00 m&sup2;)</span></p>
+              <div class="seg" id="shapeSeg">
+                <button type="button" data-s="rect_tall">Tall rect</button>
+                <button type="button" data-s="rect_wide">Wide rect</button>
+                <button type="button" data-s="circle">Circle</button>
+                <button type="button" data-s="triangle">Triangle</button>
+              </div>
+            </div>
+            <div>
+              <p class="fieldlab">Triangle only</p>
+              <button class="btn" id="flipBtn" type="button">Flip it over</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="slider-row">
+              <label for="depth"><span>Depth of centroid <span class="v">h</span><sub>C</sub></span><b id="depthV">3.0 m</b></label>
+              <input type="range" id="depth" min="0.6" max="5" step="0.05" value="3">
+            </div>
+            <div class="slider-row">
+              <label for="theta"><span>Angle to free surface <span class="v">&theta;</span></span><b id="thetaV">50&deg;</b></label>
+              <input type="range" id="theta" min="12" max="90" step="1" value="50">
+            </div>
+          </div>
+          <div class="row">
+            <label class="chk"><input type="checkbox" id="absChk"> Include atmospheric pressure on the wetted face only</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>Geometry of the plate</h3>
+        <svg id="shapeSvg" viewBox="0 0 300 150" role="img" aria-label="The selected plate shape with its centroid marked and its extent along the plate indicated."></svg>
+        <table class="props">
+          <tr><td>Area <span class="v">A</span></td><td id="pA">&mdash;</td></tr>
+          <tr><td>Extent along plate <span class="v">b</span></td><td id="pB">&mdash;</td></tr>
+          <tr><td>Second moment <span class="v">I</span><sub>xx,C</sub></td><td id="pI">&mdash;</td></tr>
+          <tr><td>Radius of gyration&sup2; <span class="v">k</span>&sup2; = <span class="v">I</span>/<span class="v">A</span></td><td id="pK">&mdash;</td></tr>
+        </table>
+        <p class="note" style="margin-top:14px"><b><span class="v">k</span>&sup2;</b> is the only thing about the shape that the answer depends on. Two plates of equal area and different <span class="v">k</span>&sup2; give the same force in different places.</p>
+      </div>
+
+      <div class="card">
+        <h3>Result</h3>
+        <div class="hero">
+          <p class="lab">CP sits below C by</p>
+          <p class="val"><span id="rOff">&mdash;</span> <small>m along the plate</small></p>
+          <p class="sub" id="rOffPct">&mdash;</p>
+        </div>
+        <table class="props" style="margin-top:14px">
+          <tr><td>Pressure at centroid <span class="v">P</span><sub>C</sub></td><td id="rPc">&mdash;</td></tr>
+          <tr><td>Resultant force <span class="v">F</span><sub>R</sub> = <span class="v">P</span><sub>C</sub><span class="v">A</span></td><td id="rFr">&mdash;</td></tr>
+          <tr><td>Centroid along plate <span class="v">y</span><sub>C</sub></td><td id="rYc">&mdash;</td></tr>
+          <tr><td>Centre of pressure <span class="v">y</span><sub>P</sub></td><td id="rYp">&mdash;</td></tr>
+          <tr id="rowEff" hidden><td>Distance to zero-pressure line <span class="v">y</span><sub>C</sub>*</td><td id="rEff">&mdash;</td></tr>
+        </table>
+        <div class="eqbox">
+          <span class="eq"><span class="v">y</span><sub>P</sub> <span class="op">&minus;</span> <span class="v">y</span><sub>C</sub> <span class="op">=</span> <span style="display:inline-block;vertical-align:-.55em;text-align:center;font-size:.82em"><span style="display:block;border-bottom:1.5px solid currentColor;padding:0 .3em"><span class="v">k</span>&sup2;</span><span style="display:block"><span class="v">y</span><sub>C</sub>*</span></span></span>
+          <p class="eqnote" id="eqNote">&mdash;</p>
+        </div>
+        <div class="note" id="insight">&mdash;</div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i)};
+var RHO=1000, G=9.81, PATM=101325;
+var SH={
+  rect_tall:{n:"Tall rectangle", a:1, b:3,           A:3, I:2.25,   k:"rect"},
+  rect_wide:{n:"Wide rectangle", a:3, b:1,           A:3, I:0.25,   k:"rect"},
+  circle:   {n:"Circle",         R:Math.sqrt(3/Math.PI), A:3,        k:"circ"},
+  triangle: {n:"Triangle",       a:2, b:3,           A:3, I:1.5,    k:"tri"}
+};
+SH.circle.b=2*SH.circle.R;
+SH.circle.I=Math.PI*Math.pow(SH.circle.R,4)/4;
+
+var st={shape:"rect_tall", hC:3, th:50, abs:false, flip:false};
+
+// extent of the plate above / below its own centroid — NOT b/2 for a triangle
+function ext(){
+  var sh=SH[st.shape];
+  if(st.shape==="triangle") return st.flip? {up:sh.b/3, dn:2*sh.b/3} : {up:2*sh.b/3, dn:sh.b/3};
+  return {up:sh.b/2, dn:sh.b/2};
+}
+
+var mqDark=window.matchMedia("(prefers-color-scheme: dark)");
+$("themeBtn").addEventListener("click",function(){
+  var s=document.documentElement.getAttribute("data-theme");
+  var d=s?s==="dark":mqDark.matches;
+  document.documentElement.setAttribute("data-theme",d?"light":"dark");
+});
+
+var SURF=58, S=58, CX=332, W=620, H=480;
+function esc(s){return String(s)}
+function ln(x1,y1,x2,y2,stroke,w,extra){
+  return '<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+
+         '" stroke="'+stroke+'" stroke-width="'+w+'"'+(extra||"")+'/>';
+}
+function txt(x,y,cls,s,extra){
+  return '<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" class="'+cls+'"'+(extra||"")+'>'+s+'</text>';
+}
+
+function calc(){
+  var sh=SH[st.shape];
+  var th=st.th*Math.PI/180, sin=Math.sin(th), cos=Math.cos(th);
+  var E=ext();
+  var hMin=E.up*sin+0.10;
+  var dEl=$("depth");
+  dEl.min=hMin.toFixed(2);
+  if(st.hC<hMin){st.hC=hMin; dEl.value=st.hC;}
+  var hC=st.hC;
+  var yC=hC/sin;
+  var P0=st.abs?PATM:0;
+  var PC=P0+RHO*G*hC;
+  var FR=PC*sh.A;
+  var yCs=yC+P0/(RHO*G*sin);          // distance to the zero-pressure line, along the plate
+  var k2=sh.I/sh.A;
+  var off=k2/yCs;
+  return {sh:sh,E:E,th:th,sin:sin,cos:cos,hC:hC,yC:yC,yCs:yCs,P0:P0,PC:PC,FR:FR,k2:k2,off:off,yP:yC+off};
+}
+
+function drawScene(c){
+  var sh=c.sh, d={x:-c.cos,y:c.sin}, nO={x:-c.sin,y:-c.cos};   // d.nO = cos*sin - sin*cos = 0
+  var Cx=CX, Cy=SURF+c.hC*S, uP=c.E.up*S, dN=c.E.dn*S;
+  var top={x:Cx-uP*d.x, y:Cy-uP*d.y}, bot={x:Cx+dN*d.x, y:Cy+dN*d.y};
+  var o='';
+  o+='<rect x="0" y="'+SURF+'" width="'+W+'" height="'+(H-SURF)+'" fill="var(--fluid-soft)" opacity=".5"/>';
+  o+=ln(0,SURF,W,SURF,"var(--fluid)",2);
+  o+=txt(12,SURF-10,"axlab","free surface &nbsp;&middot;&nbsp; "+(c.P0?"P<tspan baseline-shift=\"sub\" font-size=\"9\">atm</tspan> acting":"gauge pressure"));
+
+  // plane line back to O
+  var Ox=Cx+c.yC*S*c.cos, Oy=SURF, EDGE=W-10;
+  var vis=Ox<EDGE;
+  if(vis){
+    o+=ln(top.x,top.y,Ox,Oy,"var(--ink-3)",1.2,' stroke-dasharray="5 5" opacity=".7"');
+    o+='<circle cx="'+Ox.toFixed(1)+'" cy="'+Oy+'" r="4" fill="var(--ink-2)"/>';
+    o+=txt(Ox+9,SURF-10,"dimtext","O");
+  } else {
+    var t=(EDGE-top.x)/(c.cos*S), ey=top.y-t*c.sin*S;
+    o+=ln(top.x,top.y,EDGE,ey,"var(--ink-3)",1.2,' stroke-dasharray="5 5" opacity=".7"');
+    o+=txt(EDGE-4,ey-9,"axlab","to O &#8599;",' text-anchor="end"');
+  }
+
+  // angle arc at O
+  if(vis&&c.th>0.18){
+    var r=36, ax=Ox-r, ex=Ox-r*c.cos, ey=SURF+r*c.sin;
+    o+='<path d="M '+ax.toFixed(1)+' '+SURF+' A '+r+' '+r+' 0 0 0 '+ex.toFixed(1)+' '+ey.toFixed(1)+'" fill="none" stroke="var(--ink-3)" stroke-width="1.3"/>';
+    o+=txt(Ox-r-16,SURF+20,"dimtext","&#952;");
+  }
+
+  // pressure arrows
+  var N=9, yTop=c.yC-c.E.up, yBot=c.yC+c.E.dn;
+  var Pb=c.P0+RHO*G*yBot*c.sin, Lmax=62;
+  var pts=[];
+  for(var i=0;i<N;i++){
+    var t=i/(N-1), y=yTop+(yBot-yTop)*t;
+    var P=c.P0+RHO*G*y*c.sin, L=Lmax*P/Pb;
+    var px=top.x+(bot.x-top.x)*t, py=top.y+(bot.y-top.y)*t;
+    var sx=px+nO.x*L, sy=py+nO.y*L;
+    pts.push([sx,sy]);
+    o+=ln(sx,sy,px,py,"var(--fluid)",1.9,' marker-end="url(#ap)" opacity=".92"');
+  }
+  // end pressures, so magnitude is legible even though arrow length is normalised
+  var Pt=c.P0+RHO*G*yTop*c.sin;
+  o+=txt(pts[0][0]-9,pts[0][1]-7,"axlab",(Pt/1000).toFixed(1)+" kPa",' text-anchor="end" fill="var(--fluid)"');
+  o+=txt(pts[N-1][0]-9,pts[N-1][1]+15,"axlab",(Pb/1000).toFixed(1)+" kPa",' text-anchor="end" fill="var(--fluid)"');
+  o+='<polygon points="'+pts.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1)}).join(' ')+
+     ' '+bot.x.toFixed(1)+','+bot.y.toFixed(1)+' '+top.x.toFixed(1)+','+top.y.toFixed(1)+
+     '" fill="var(--fluid)" opacity=".10" stroke="var(--fluid)" stroke-width="1.3" stroke-opacity=".55"/>';
+
+  // plate
+  o+=ln(top.x,top.y,bot.x,bot.y,"var(--plate)",8,' stroke-linecap="round"');
+
+  // centroid + centre of pressure
+  var Px=Cx+c.off*S*d.x, Py=Cy+c.off*S*d.y;
+  o+=ln(Cx,Cy,Px,Py,"var(--cp)",3);
+  o+='<circle cx="'+Cx.toFixed(1)+'" cy="'+Cy.toFixed(1)+'" r="6" fill="var(--ink-3)" stroke="var(--surface)" stroke-width="2"/>';
+  o+='<circle cx="'+Px.toFixed(1)+'" cy="'+Py.toFixed(1)+'" r="7" fill="var(--cp)" stroke="var(--surface)" stroke-width="2"/>';
+  var lo={x:-nO.x,y:-nO.y};                       // into the plate = toward the dry side
+  o+=txt(Cx+lo.x*20-d.x*20,Cy+lo.y*20-d.y*20+5,"mark","C",' fill="var(--ink-2)" text-anchor="middle"');
+  o+=txt(Px+lo.x*20+d.x*24,Py+lo.y*20+d.y*24+5,"mark","CP",' fill="var(--cp)" text-anchor="middle"');
+  // resultant, drawn on the dry side as the single equivalent force
+  o+=ln(Px+lo.x*40,Py+lo.y*40,Px+lo.x*104,Py+lo.y*104,"var(--cp)",3.4,' marker-end="url(#ar)"');
+  o+=txt(Px+lo.x*116+6,Py+lo.y*116+5,"mark","F<tspan baseline-shift=\"sub\" font-size=\"9\">R</tspan>",' fill="var(--cp)"');
+
+  // depth dimension
+  o+=ln(42,SURF,42,Cy,"var(--ink-3)",1.2,' stroke-dasharray="4 4"');
+  o+=ln(36,Cy,48,Cy,"var(--ink-3)",1.2);
+  o+=ln(42,Cy,Cx-10,Cy,"var(--ink-3)",1,' stroke-dasharray="3 4" opacity=".4"');
+  o+=txt(50,(SURF+Cy)/2+4,"dimtext","h<tspan baseline-shift=\"sub\" font-size=\"9\">C</tspan> = "+c.hC.toFixed(2)+" m");
+
+  var defs='<defs><marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="var(--fluid)"/></marker>'+
+           '<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="var(--cp)"/></marker></defs>';
+  $("scene").innerHTML=defs+o;
+}
+
+function drawShape(c){
+  var sh=c.sh, s=34, o='', cx=150, cy=75;
+  if(st.shape==="circle"){
+    o+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(sh.R*s).toFixed(1)+'" fill="var(--fluid-soft)" stroke="var(--fluid)" stroke-width="2"/>';
+  } else if(st.shape==="triangle"){
+    var b=sh.b*s, a=sh.a*s, ap, y1, y2;
+    if(st.flip){ ap=cy+2*b/3; y1=cy-b/3; }
+    else       { ap=cy-2*b/3; y1=cy+b/3; }
+    o+='<polygon points="'+cx+','+ap.toFixed(1)+' '+(cx-a/2).toFixed(1)+','+y1.toFixed(1)+' '+(cx+a/2).toFixed(1)+','+y1.toFixed(1)+
+       '" fill="var(--fluid-soft)" stroke="var(--fluid)" stroke-width="2" stroke-linejoin="round"/>';
+  } else {
+    o+='<rect x="'+(cx-sh.a*s/2).toFixed(1)+'" y="'+(cy-sh.b*s/2).toFixed(1)+'" width="'+(sh.a*s).toFixed(1)+
+       '" height="'+(sh.b*s).toFixed(1)+'" fill="var(--fluid-soft)" stroke="var(--fluid)" stroke-width="2"/>';
+  }
+  o+='<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="var(--ink-3)" stroke="var(--surface)" stroke-width="2"/>';
+  o+=txt(cx+11,cy+5,"mark","C",' fill="var(--ink-2)"');
+  var bh=sh.b*s/2;
+  o+=ln(255,cy-bh,255,cy+bh,"var(--ink-3)",1.3);
+  o+=ln(250,cy-bh,260,cy-bh,"var(--ink-3)",1.3);
+  o+=ln(250,cy+bh,260,cy+bh,"var(--ink-3)",1.3);
+  o+=txt(266,cy+4,"dimtext","b");
+  o+=txt(cx,142,"axlab","down the plate &#8595;",' text-anchor="middle"');
+  $("shapeSvg").innerHTML=o;
+}
+
+function fmtP(p){ return p>=1e5? (p/1e3).toFixed(1)+" kPa" : (p/1e3).toFixed(2)+" kPa"; }
+function fmtF(f){ return f>=1e6? (f/1e6).toFixed(2)+" MN" : (f/1e3).toFixed(1)+" kN"; }
+
+function render(){
+  var c=calc(), sh=c.sh;
+  drawScene(c); drawShape(c);
+  $("depthV").textContent=c.hC.toFixed(2)+" m";
+  $("thetaV").innerHTML=st.th+"&deg;";
+  $("pA").innerHTML="3.00 <small>m&sup2;</small>";
+  $("pB").innerHTML=sh.b.toFixed(2)+" <small>m</small>";
+  $("pI").innerHTML=sh.I.toFixed(3)+" <small>m&#8308;</small>";
+  $("pK").innerHTML=c.k2.toFixed(4)+" <small>m&sup2;</small>";
+  $("rOff").textContent=c.off.toFixed(3);
+  $("rOffPct").innerHTML="that is <b>"+(100*c.off/sh.b).toFixed(1)+"%</b> of the plate&rsquo;s length, and <b>"+
+      (c.off*c.sin*1000).toFixed(0)+" mm</b> deeper vertically";
+  $("rPc").innerHTML=fmtP(c.PC);
+  $("rFr").innerHTML=fmtF(c.FR);
+  $("rYc").innerHTML=c.yC.toFixed(2)+" <small>m</small>";
+  $("rYp").innerHTML=c.yP.toFixed(2)+" <small>m</small>";
+  $("rowEff").hidden=!st.abs;
+  $("rEff").innerHTML=c.yCs.toFixed(1)+" <small>m</small>";
+  $("eqNote").innerHTML= st.abs
+    ? '<span class="v">y</span><sub>C</sub>* = <span class="v">y</span><sub>C</sub> + <span class="v">P</span><sub>atm</sub>/<span class="v">&rho;g</span>sin<span class="v">&theta;</span> &mdash; the distance to where pressure would extrapolate to zero, now far above the surface.'
+    : 'With gauge pressure <span class="v">y</span><sub>C</sub>* is just <span class="v">y</span><sub>C</sub>. Offset is a fixed length <span class="v">k</span>&sup2; divided by depth.';
+  $("flipBtn").disabled = st.shape!=="triangle";
+  $("cap").innerHTML="Arrow <b>length</b> is normalised so the longest always fits &mdash; compare the taper, read the magnitude off the two labelled ends. "+
+    (st.abs? "With <span class=\"v\">P</span><sub>atm</sub> included the arrows are nearly equal &mdash; that is the point."
+           : "The taper is the pressure gradient across the plate.");
+
+  var m, cls="note";
+  if(st.abs){
+    cls="note hot";
+    m="<b>Look what happened.</b> Adding <span class='v'>P</span><sub>atm</sub> to one face pushes the zero-pressure line "+
+      (PATM/(RHO*G)).toFixed(1)+" m above the free surface, so the plate now sits <b>"+(c.yCs/c.yC).toFixed(1)+
+      "&times;</b> further from where pressure vanishes than it does from the water surface. Pressure across it is nearly uniform, and CP collapses onto C. "+
+      "A real gate has air on <em>both</em> faces, so <span class='v'>P</span><sub>atm</sub> cancels and you use gauge pressure &mdash; which is why this box is normally unticked.";
+  } else if(st.th<20){
+    m="<b>Nearly horizontal.</b> Every point sits at almost the same depth, so pressure barely varies and CP is almost exactly at C. A truly horizontal plate has CP = C.";
+  } else if(c.off/sh.b>0.10){
+    m="<b>Shallow and steep.</b> The bottom of the plate feels much more pressure than the top, so the resultant sits well down the plate.";
+  } else {
+    m="Push the plate deeper and the offset shrinks &mdash; not because the gradient changes, but because it matters less next to the pressure already there.";
+  }
+  if(st.shape==="triangle"&&st.flip) m+=" <br><br><b>And the flip changed nothing.</b> Reflecting a shape about its own centroidal axis leaves <span class='v'>I</span><sub>xx,C</sub> untouched, so apex-up and apex-down have identical centres of pressure. Most people bet otherwise.";
+  var el=$("insight"); el.className=cls; el.innerHTML=m;
+
+  [].slice.call(document.querySelectorAll("#shapeSeg button")).forEach(function(b){
+    b.setAttribute("aria-pressed", b.dataset.s===st.shape?"true":"false");
+  });
+}
+
+$("depth").addEventListener("input",function(){st.hC=+this.value;render()});
+$("theta").addEventListener("input",function(){st.th=+this.value;render()});
+$("absChk").addEventListener("change",function(){st.abs=this.checked;render()});
+$("flipBtn").addEventListener("click",function(){st.flip=!st.flip;render()});
+[].slice.call(document.querySelectorAll("#shapeSeg button")).forEach(function(b){
+  b.addEventListener("click",function(){st.shape=b.dataset.s; if(st.shape!=="triangle")st.flip=false; render();});
+});
+render();
+})();
+</script>
+</body>
+</html>
