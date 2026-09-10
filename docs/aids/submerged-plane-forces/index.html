@@ -176,6 +176,9 @@ table.props td small{color:var(--ink-3);font-weight:400;font-size:12px}
           <tr><td>Radius of gyration&sup2; <span class="v">k</span>&sup2; = <span class="v">I</span>/<span class="v">A</span></td><td id="pK">&mdash;</td></tr>
         </table>
         <p class="note" style="margin-top:14px"><b><span class="v">k</span>&sup2;</b> is the only thing about the shape that the answer depends on. Two plates of equal area and different <span class="v">k</span>&sup2; give the same force in different places.</p>
+        <h3 style="margin-top:20px">What <span class="v">k</span>&sup2; actually is</h3>
+        <svg id="k2Svg" viewBox="0 0 300 128" role="img" aria-label="How the plate's area is spread along the slope, with the root mean square distance k marked either side of the centroid."></svg>
+        <p class="note" style="margin-top:12px"><span class="v">k</span>&sup2; = <span class="v">I</span>/<span class="v">A</span> is the <b>mean square distance</b> of the area from the centroid: average every strip's distance squared, weighted by how much area sits there. It is a variance. So the offset <span class="v">k</span>&sup2;/<span class="v">y</span><sub>C</sub>* reads as <b>variance of depth over mean depth</b>, and both limits follow without algebra. Spread the area further from its own centre and the offset grows; push the plate deeper and the mean swamps the variance, so CP collapses onto C.</p>
       </div>
 
       <div class="card">
@@ -335,6 +338,33 @@ function drawScene(c){
   $("scene").innerHTML=defs+o;
 }
 
+function drawK2(c){
+  var sh=c.sh, E=ext(), k=Math.sqrt(c.k2);
+  var X0=26,X1=286,MID=(X0+X1)/2,YB=92,H=54;      // horizontal axis = distance from the centroid
+  var half=Math.max(E.up,E.dn), SC=(X1-MID-14)/half;
+  function w(u){                                   // plate width at distance u below the centroid
+    if(st.shape==="circle"){var r=sh.R; return Math.abs(u)>=r?0:2*Math.sqrt(r*r-u*u);}
+    if(st.shape==="triangle"){var up=E.up,dn=E.dn; if(u< -up||u>dn)return 0;
+      return st.flip? sh.a*(dn-u)/sh.b : sh.a*(u+up)/sh.b;}
+    return (u<-E.up||u>E.dn)?0:sh.a;
+  }
+  var wmax=0,i,u; for(i=0;i<=200;i++){u=-E.up+(E.up+E.dn)*i/200; wmax=Math.max(wmax,w(u));}
+  var pts=[];
+  for(i=0;i<=200;i++){u=-E.up+(E.up+E.dn)*i/200; pts.push((MID+u*SC).toFixed(1)+","+(YB-H*w(u)/wmax).toFixed(1));}
+  var o='<polygon points="'+(MID-E.up*SC).toFixed(1)+','+YB+' '+pts.join(' ')+' '+(MID+E.dn*SC).toFixed(1)+','+YB+
+        '" fill="var(--fluid-soft)" stroke="var(--fluid)" stroke-width="1.6"/>';
+  o+=ln(X0,YB,X1,YB,"var(--ink-3)",1.2);
+  o+=ln(MID,YB+5,MID,YB-H-12,"var(--ink-3)",1.2,' stroke-dasharray="3 3"');
+  o+=txt(MID,YB+18,"axlab","C",' text-anchor="middle" font-weight="700"');
+  var kl=MID-k*SC, kr=MID+k*SC;
+  o+=ln(kl,YB+2,kl,YB-H-4,"var(--cp)",1.8);
+  o+=ln(kr,YB+2,kr,YB-H-4,"var(--cp)",1.8);
+  o+=ln(kl,YB-H-9,kr,YB-H-9,"var(--cp)",1.4);
+  o+=txt(MID,YB-H-14,"axlab","&plusmn; k = &plusmn;"+k.toFixed(3)+" m",' text-anchor="middle" fill="var(--cp)"');
+  o+=txt(X0,YB+18,"axlab","up the slope");
+  o+=txt(X1,YB+18,"axlab","down the slope",' text-anchor="end"');
+  $("k2Svg").innerHTML=o;
+}
 function drawShape(c){
   var sh=c.sh, s=34, o='', cx=150, cy=75;
   if(st.shape==="circle"){
@@ -365,7 +395,7 @@ function fmtF(f){ return f>=1e6? (f/1e6).toFixed(2)+" MN" : (f/1e3).toFixed(1)+"
 
 function render(){
   var c=calc(), sh=c.sh;
-  drawScene(c); drawShape(c);
+  drawScene(c); drawShape(c); drawK2(c);
   $("depthV").textContent=c.hC.toFixed(2)+" m";
   $("thetaV").innerHTML=st.th+"&deg;";
   $("pA").innerHTML="3.00 <small>m&sup2;</small>";

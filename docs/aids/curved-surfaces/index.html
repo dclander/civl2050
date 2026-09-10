@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Block You Are Allowed to Draw</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,600&display=swap">
+<style>
+:root{--bg:#F5F6F4;--surface:#FFF;--surface-2:#EEF0EE;--ink:#15181C;--ink-2:#4E565F;--ink-3:#7C848D;
+ --rule:#D8DCDA;--grid:#E6E9E7;--w:#BD5A0E;--w-soft:#F6E7D9;--fluid:#0092AB;--fluid-soft:#DBEFF3;
+ --shadow:0 1px 2px rgba(20,24,28,.05),0 10px 26px -16px rgba(20,24,28,.3)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171A;--surface:#1C2126;--surface-2:#242A30;
+ --ink:#E9ECEE;--ink-2:#A7B0B8;--ink-3:#78828B;--rule:#2C3339;--grid:#252C32;--w:#D9762E;--w-soft:#38240F;
+ --fluid:#12A2BA;--fluid-soft:#0F2E37;--shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px -18px rgba(0,0,0,.8)}}
+:root[data-theme="dark"]{--bg:#14171A;--surface:#1C2126;--surface-2:#242A30;--ink:#E9ECEE;--ink-2:#A7B0B8;--ink-3:#78828B;
+ --rule:#2C3339;--grid:#252C32;--w:#D9762E;--w-soft:#38240F;--fluid:#12A2BA;--fluid-soft:#0F2E37;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px -18px rgba(0,0,0,.8)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.eyebrow,.rail-n{font-family:Archivo,"IBM Plex Sans",sans-serif}
+.v{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-weight:600}
+header.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--rule);padding:14px 0 0}
+.top-in,nav.rail,.wrap{max-width:1120px;margin:0 auto;padding-left:24px;padding-right:24px}
+.top-in{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.coursetag{font-family:Archivo,sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.top-title{font-family:Archivo,sans-serif;font-weight:600;font-size:15px;margin:0;color:var(--ink-2)}
+.spacer{flex:1}
+.tbtn{font:inherit;font-size:13px;background:none;border:1px solid var(--rule);color:var(--ink-2);border-radius:999px;padding:4px 13px;cursor:pointer}
+nav.rail{padding-top:10px;display:flex;overflow-x:auto}
+.rail-item{display:flex;align-items:baseline;gap:8px;background:none;border:0;cursor:pointer;padding:8px 0 12px;margin-right:24px;
+  color:var(--ink-3);font:inherit;font-size:13.5px;border-bottom:2px solid transparent;white-space:nowrap}
+.rail-item[aria-current="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.rail-n{font-weight:600;font-size:11px;letter-spacing:.08em;color:var(--ink-3)}
+.rail-item[aria-current="true"] .rail-n{color:var(--w)}
+.wrap{padding-top:28px;padding-bottom:64px}
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3);margin:0 0 9px}
+h2{font-size:clamp(25px,3.1vw,35px);line-height:1.1;letter-spacing:-.022em;margin:0 0 12px;text-wrap:balance;font-weight:700}
+.lede{font-size:17px;color:var(--ink-2);max-width:66ch;margin:0 0 24px}
+.lede strong{color:var(--ink);font-weight:600}
+.grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:24px;align-items:start}
+@media(max-width:940px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px;box-shadow:var(--shadow)}
+.card+.card{margin-top:20px}
+.card h3{font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:0 0 14px}
+svg{display:block;max-width:100%;height:auto}
+figcaption{font-size:13px;color:var(--ink-3);margin-top:11px;line-height:1.45}
+.ctrls{display:grid;gap:13px;margin-top:16px;padding-top:15px;border-top:1px solid var(--rule)}
+.slider-row label{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-2);margin-bottom:5px}
+.slider-row label b{font-weight:500;font-variant-numeric:tabular-nums;color:var(--fluid)}
+input[type=range]{width:100%;accent-color:var(--fluid);height:22px;margin:0;display:block}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between}
+.btn{font:inherit;font-size:14px;font-weight:500;padding:8px 16px;border-radius:7px;cursor:pointer;border:1px solid var(--rule);background:var(--surface-2);color:var(--ink)}
+.btn.primary{background:var(--w);border-color:var(--w);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.btn:focus-visible,.rail-item:focus-visible,.tbtn:focus-visible,input:focus-visible{outline:2px solid var(--fluid);outline-offset:2px}
+table.p{width:100%;border-collapse:collapse;font-size:14.5px}
+table.p td{padding:8px 0;border-bottom:1px solid var(--grid)}
+table.p tr:last-child td{border-bottom:0}
+table.p td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.is-h td:last-child{color:var(--fluid)} .is-v td:last-child{color:var(--w)}
+.hero{border:1px solid var(--w);background:var(--w-soft);border-radius:9px;padding:14px 16px;margin-top:6px}
+.hero .lab{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);margin:0 0 3px}
+.hero .val{font-size:28px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--w);margin:0;line-height:1.15}
+.hero .sub{font-size:13.5px;color:var(--ink-2);margin:6px 0 0}
+.note{font-size:13.5px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;margin-top:14px}
+.note b{color:var(--ink)}
+.note.hot{background:var(--fluid-soft);border-color:var(--fluid)}
+.eqbox{border-left:3px solid var(--fluid);padding:2px 0 2px 15px;margin:18px 0 0}
+.eq{font-size:21px;display:block;margin-bottom:6px;line-height:1.35}
+.eq .op{color:var(--ink-3);padding:0 .14em}
+.eqnote{font-size:13.5px;color:var(--ink-2);margin:0}
+.axlab{fill:var(--ink-3);font-family:"IBM Plex Sans",sans-serif;font-size:11.5px}
+.mk{font-family:Archivo,sans-serif;font-size:13px;font-weight:700}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<header class="top"><div class="top-in">
+  <span class="coursetag">CIVL 2050 &middot; Fluid Mechanics</span>
+  <p class="top-title">Forces on curved surfaces</p><span class="spacer"></span>
+  <button class="tbtn" id="themeBtn" type="button">Theme</button>
+</div>
+<nav class="rail" id="rail" aria-label="Steps">
+  <button class="rail-item" data-i="0"><span class="rail-n">01</span> The trough</button>
+  <button class="rail-item" data-i="1"><span class="rail-n">02</span> Isolate the fluid</button>
+  <button class="rail-item" data-i="2"><span class="rail-n">03</span> Load its flat faces</button>
+  <button class="rail-item" data-i="3"><span class="rail-n">04</span> Close the balance</button>
+  <button class="rail-item" data-i="4"><span class="rail-n">05</span> Flip it onto the shell</button>
+</nav></header>
+<main class="wrap">
+  <p class="eyebrow" id="eyebrow">Step 1</p>
+  <h2 id="head">A curved surface you cannot integrate.</h2>
+  <p class="lede" id="lede"></p>
+  <div class="grid">
+    <div class="card">
+      <figure>
+        <svg id="scene" viewBox="0 0 500 400" role="img" aria-label="A semicircular trough of water, the quarter block of fluid isolated from it, and the forces acting on that block."></svg>
+        <figcaption id="cap"></figcaption>
+      </figure>
+      <div class="ctrls">
+        <div class="slider-row">
+          <label for="rad"><span>Trough radius <span class="v">R</span></span><b id="radV">0.50 m</b></label>
+          <input type="range" id="rad" min="0.3" max="1" step="0.02" value="0.5">
+        </div>
+        <div class="row">
+          <button class="btn" id="prev" type="button">&larr; Back</button>
+          <button class="btn primary" id="next" type="button">Next &rarr;</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Running numbers</h3>
+        <table class="p">
+          <tr><td>Radius <span class="v">R</span>, length <span class="v">L</span></td><td id="rGeo">&mdash;</td></tr>
+          <tr class="is-h"><td>On the flat vertical face <span class="v">F</span><sub>x</sub></td><td id="rFx">&mdash;</td></tr>
+          <tr class="is-v"><td>Weight of the block <span class="v">W</span></td><td id="rW">&mdash;</td></tr>
+          <tr><td>Resultant on the shell <span class="v">F</span><sub>R</sub></td><td id="rFR">&mdash;</td></tr>
+          <tr><td>Its angle below horizontal <span class="v">&theta;</span></td><td id="rTh">&mdash;</td></tr>
+        </table>
+        <div class="hero">
+          <p class="lab">Cable tension</p>
+          <p class="val" id="rT">&mdash;</p>
+          <p class="sub" id="rTsub">&mdash;</p>
+        </div>
+        <div class="eqbox"><span class="eq" id="eq"></span><p class="eqnote" id="eqnote"></p></div>
+        <div class="note" id="insight"></div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+(function(){"use strict";
+var $=function(i){return document.getElementById(i)},G=9.81,RHO=1000,L=3;
+var st={R:0.5,step:0};
+var mq=matchMedia("(prefers-color-scheme: dark)");
+$("themeBtn").onclick=function(){var s=document.documentElement.getAttribute("data-theme");
+  document.documentElement.setAttribute("data-theme",(s?s==="dark":mq.matches)?"light":"dark")};
+
+var SURF=92,CX=190,PX=190,K=0.4244;          // K = 4/(3*pi), centroid of a quarter disc
+function calc(){var R=st.R,Fx=RHO*G*(R/2)*(R*L),W=RHO*G*L*Math.PI*R*R/4;
+  return{R:R,Fx:Fx,W:W,FR:Math.hypot(Fx,W),th:Math.atan(W/Fx)}}
+function ln(a,b,c,d,s,w,e){return '<line x1="'+a.toFixed(1)+'" y1="'+b.toFixed(1)+'" x2="'+c.toFixed(1)+'" y2="'+d.toFixed(1)+'" stroke="'+s+'" stroke-width="'+w+'"'+(e||"")+'/>'}
+function tx(x,y,c,s,e){return '<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" class="'+c+'"'+(e||"")+'>'+s+'</text>'}
+
+function draw(){
+  var c=calc(),R=c.R*PX,s=st.step,o='',BX=CX,BY=SURF,HX=CX,HY=SURF+R;
+  o+='<defs><marker id="af" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="var(--fluid)"/></marker>'
+   +'<marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="var(--w)"/></marker>'
+   +'<marker id="ak" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="var(--ink)"/></marker></defs>';
+  o+=ln(14,SURF,492,SURF,"var(--fluid)",2);
+  if(s<4) o+=tx(18,SURF-9,"axlab","free surface");
+  var faded=(s>=1);
+  // left half of the trough, context only
+  o+='<path d="M '+(CX-R)+' '+SURF+' A '+R+' '+R+' 0 0 0 '+CX+' '+(SURF+R)+'" fill="none" stroke="var(--ink-3)" stroke-width="'+(faded?2:5)+'" opacity="'+(faded?.3:.85)+'"/>';
+  if(!faded) o+='<path d="M '+(CX-R)+' '+SURF+' L '+CX+' '+SURF+' L '+CX+' '+(SURF+R)+' A '+R+' '+R+' 0 0 1 '+(CX-R)+' '+SURF+' Z" fill="var(--fluid-soft)" opacity=".75"/>';
+  // the quarter block of fluid
+  o+='<path d="M '+CX+' '+SURF+' L '+(CX+R)+' '+SURF+' A '+R+' '+R+' 0 0 1 '+CX+' '+(SURF+R)+' Z" fill="var(--fluid-soft)" opacity="'+(s>=1?1:.75)+'"'+(s>=1?' stroke="var(--fluid)" stroke-width="2"':'')+'/>';
+  // the shell
+  o+='<path d="M '+(CX+R)+' '+SURF+' A '+R+' '+R+' 0 0 1 '+CX+' '+(SURF+R)+'" fill="none" stroke="var(--ink)" stroke-width="'+(s>=1&&s<4?2:5.5)+'" opacity="'+(s>=1&&s<4?.32:1)+'" stroke-linecap="round"/>';
+  // cable and hinge
+  if(s===0||s===4){
+    o+=ln(CX-R,SURF-13,CX+R,SURF-13,"var(--ink)",2.4,' stroke-dasharray="9 5"');
+    o+=tx(CX+R+10,SURF-9,"mk","cable");
+  }
+  o+='<circle cx="'+HX+'" cy="'+HY+'" r="5.5" fill="var(--surface)" stroke="var(--ink)" stroke-width="2.4"/>';
+  o+=tx(HX-46,HY+20,"mk","hinge");
+  // the block's flat faces
+  if(s>=1){
+    o+=ln(CX,SURF,CX,SURF+R,"var(--fluid)",2.6,' stroke-dasharray="6 4"');
+    o+=ln(CX,SURF,CX+R,SURF,"var(--fluid)",2.6,' stroke-dasharray="6 4"');
+  }
+  // pressure on the vertical face, and the weight
+  if(s>=2){
+    var N=7,LM=0.42*R;
+    for(var i=1;i<=N;i++){var y=SURF+R*i/(N+1),len=LM*(i/(N+1));
+      o+=ln(CX-len-3,y,CX-3,y,"var(--fluid)",1.7,' marker-end="url(#af)"');}
+    o+=tx(CX-LM-12,SURF+R*0.52,"mk",'F<tspan baseline-shift="sub" font-size="9">x</tspan>',' fill="var(--fluid)" text-anchor="end"');
+    var gx=CX+K*R,gy=SURF+K*R,wl=0.5*R+22;
+    o+='<circle cx="'+gx.toFixed(1)+'" cy="'+gy.toFixed(1)+'" r="4" fill="var(--w)"/>';
+    o+=ln(gx,gy,gx,gy+wl,"var(--w)",3.4,' marker-end="url(#aw)"');
+    o+=tx(gx+9,gy+wl+2,"mk","W",' fill="var(--w)"');
+  }
+  // the shell's reaction on the fluid
+  if(s===3){
+    var ax=CX+R*0.62,ay=SURF+R*0.62;
+    o+=ln(ax+52,ay,ax+6,ay,"var(--ink)",3.2,' marker-end="url(#ak)"');
+    o+=tx(ax+58,ay+4,"mk",'F<tspan baseline-shift="sub" font-size="9">H</tspan>',' fill="var(--ink)"');
+    o+=ln(ax,ay+52,ax,ay+6,"var(--ink)",3.2,' marker-end="url(#ak)"');
+    o+=tx(ax-8,ay+68,"mk",'F<tspan baseline-shift="sub" font-size="9">V</tspan>',' fill="var(--ink)" text-anchor="end"');
+  }
+  // step 5: the resultant on the shell, through the centre
+  if(s===4){
+    var th=c.th,ex=CX+R*Math.cos(th),ey=SURF+R*Math.sin(th);
+    o+=ln(CX,SURF,ex,ey,"var(--w)",1.6,' stroke-dasharray="7 5"');
+    o+=ln(ex,ey,CX+(R+96)*Math.cos(th),SURF+(R+96)*Math.sin(th),"var(--w)",5,' marker-end="url(#aw)"');
+    o+=tx(CX+(R+108)*Math.cos(th),SURF+(R+108)*Math.sin(th)+5,"mk",'F<tspan baseline-shift="sub" font-size="9">R</tspan>',' fill="var(--w)"');
+    o+='<circle cx="'+CX+'" cy="'+SURF+'" r="6" fill="var(--w)"/>';
+    o+=tx(CX-12,SURF+17,"mk","O",' fill="var(--w)" text-anchor="end"');
+    o+=ln(CX,SURF,CX,SURF+R,"var(--ink-3)",1.2,' stroke-dasharray="4 4"');
+  }
+  $("scene").innerHTML=o;
+}
+var COPY=[
+ {e:"Step 1",h:"A curved surface you cannot integrate.",
+  l:"The trough is two symmetric shells hinged at the bottom and tied by a cable at the rim. Pressure on the curve changes direction at every point, so there is no single plane to apply <span class='v'>F</span><sub>R</sub> = <span class='v'>P</span><sub>C</sub><span class='v'>A</span> to.",
+  c:"Full trough, filled to the rim. We only need the right half by symmetry.",
+  n:"The trick is not to integrate over the curve at all. It is to draw a different free body."},
+ {e:"Step 2",h:"Cut out a block of the water instead.",
+  l:"Take the quarter of fluid bounded by the shell, the vertical midplane, and the free surface. It is water, it is at rest, so the forces on it sum to zero. Two of its three faces are <strong>flat</strong>.",
+  c:"The shell is faded because we are no longer looking at it. The dashed faces are imaginary cuts through the water.",
+  n:"The vertical face is a plane surface. You solved exactly this in Class 03."},
+ {e:"Step 3",h:"The flat faces are last week's problem.",
+  l:"On the vertical face, pressure grows linearly with depth and the resultant is <span class='v'>P</span><sub>C</sub><span class='v'>A</span>. The top face sits at the free surface, so its gauge pressure is zero and it contributes nothing. Then add the block's own weight.",
+  c:"F<tspan>x</tspan> on the vertical cut, W at the quarter-disc centroid, 4R/3π from the centre along each axis.",
+  n:"Nothing here is new. A plane surface and a weight."},
+ {e:"Step 4",h:"Whatever is left must come from the shell.",
+  l:"The block is in equilibrium, so the shell's push on it closes the balance exactly. Horizontally it must cancel <span class='v'>F</span><sub>x</sub>; vertically it must carry <span class='v'>W</span>.",
+  c:"The two components the shell must supply to hold this block still.",
+  n:"F<sub>H</sub> = F<sub>x</sub> and F<sub>V</sub> = W. That is the whole method."},
+ {e:"Step 5",h:"Turn it around, and it passes through the centre.",
+  l:"By Newton's third law the water pushes back on the shell with the same magnitude, opposite sense. Because every pressure force on a circular arc is radial, the resultant must pass through the centre of the circle.",
+  c:"The resultant on the shell, drawn through O. Its line of action needs no integration.",
+  n:""}
+];
+function fmt(n){return n>=1000?(n/1000).toFixed(2)+" kN":n.toFixed(0)+" N"}
+function render(){
+  var c=calc(),s=st.step,C=COPY[s];
+  $("eyebrow").textContent=C.e; $("head").textContent=C.h; $("lede").innerHTML=C.l; $("cap").innerHTML=C.c;
+  $("radV").textContent=c.R.toFixed(2)+" m";
+  $("rGeo").textContent=c.R.toFixed(2)+" m × "+L+" m";
+  $("rFx").textContent=fmt(c.Fx); $("rW").textContent=fmt(c.W);
+  $("rFR").textContent=s>=3?fmt(c.FR):"—";
+  $("rTh").textContent=s>=3?(c.th*180/Math.PI).toFixed(1)+"°":"—";
+  $("rT").textContent=s>=4?fmt(c.Fx):"—";
+  $("rTsub").innerHTML=s>=4?"Moments about the hinge give <b>T = F<sub>H</sub></b> exactly.":"Reach step 5.";
+  var eq=$("eq"),en=$("eqnote");
+  if(s<=2){eq.innerHTML="<span class='v'>F</span><sub>x</sub> <span class='op'>=</span> <span class='v'>&rho;g</span>(<span class='v'>R</span>/2)(<span class='v'>RL</span>) &nbsp;&nbsp; <span class='v'>W</span> <span class='op'>=</span> <span class='v'>&rho;g L</span>&#960;<span class='v'>R</span>&sup2;/4";
+    en.innerHTML="A plane-surface force and a weight. Both are things you can already compute.";}
+  else if(s===3){eq.innerHTML="<span class='v'>F</span><sub>H</sub> <span class='op'>=</span> <span class='v'>F</span><sub>x</sub> &nbsp;&nbsp; <span class='v'>F</span><sub>V</sub> <span class='op'>=</span> <span class='v'>W</span>";
+    en.innerHTML="Straight from &Sigma;<span class='v'>F</span> = 0 on the block. No integral over the curve anywhere.";}
+  else{eq.innerHTML="<span class='v'>F</span><sub>R</sub> <span class='op'>=</span> &#8730;(<span class='v'>F</span><sub>H</sub>&sup2; + <span class='v'>F</span><sub>V</sub>&sup2;) &nbsp;&nbsp; tan<span class='v'>&theta;</span> <span class='op'>=</span> <span class='v'>F</span><sub>V</sub>/<span class='v'>F</span><sub>H</sub>";
+    en.innerHTML="Acting through the centre of the circle.";}
+  var n=$("insight");
+  if(s===4){n.className="note hot";
+    n.innerHTML="<b>&#952; never changes.</b> F<sub>V</sub>/F<sub>H</sub> = (&#960;R&sup2;/4)/(R&sup2;/2) = &#960;/2 for any radius, so the resultant always leaves at "+
+      (c.th*180/Math.PI).toFixed(1)+"&#176;. And since it passes through O, its moment about the hinge is F<sub>R</sub><span class='v'>R</span>cos&#952; = F<sub>H</sub><span class='v'>R</span>, so the cable tension is just <b>T = F<sub>H</sub> = "+fmt(c.Fx)+"</b>. The curve never had to be integrated.";}
+  else {n.className="note"; n.innerHTML=C.n;}
+  [].forEach.call(document.querySelectorAll(".rail-item"),function(b){b.setAttribute("aria-current",+b.dataset.i===s?"true":"false")});
+  $("prev").disabled=s===0; $("next").disabled=s===4;
+  draw();
+}
+[].forEach.call(document.querySelectorAll(".rail-item"),function(b){b.onclick=function(){st.step=+b.dataset.i;render()}});
+$("prev").onclick=function(){if(st.step>0){st.step--;render()}};
+$("next").onclick=function(){if(st.step<4){st.step++;render()}};
+$("rad").oninput=function(){st.R=+this.value;render()};
+document.addEventListener("keydown",function(e){if(/input/i.test(e.target.tagName))return;
+  if(e.key==="ArrowRight"&&st.step<4){st.step++;render()} if(e.key==="ArrowLeft"&&st.step>0){st.step--;render()}});
+render();
+})();
+</script></body></html>
