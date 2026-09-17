@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Navier–Stokes equations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+ --bg:#F5F6F4; --surface:#FFFFFF; --surface-2:#EEF0EE; --ink:#15181C; --ink-2:#4E565F;
+ --ink-3:#7C848D; --rule:#D8DCDA; --grid:#E6E9E7;
+ --w:#BD5A0E; --w-soft:#F6E7D9; --fluid:#0092AB; --fluid-soft:#DBEFF3;
+ --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+ --bg:#14171A; --surface:#1C2126; --surface-2:#242A30; --ink:#E9ECEE; --ink-2:#A7B0B8;
+ --ink-3:#78828B; --rule:#2C3339; --grid:#252C32;
+ --w:#D9762E; --w-soft:#38240F; --fluid:#12A2BA; --fluid-soft:#0F2E37;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+ --bg:#14171A; --surface:#1C2126; --surface-2:#242A30; --ink:#E9ECEE; --ink-2:#A7B0B8;
+ --ink-3:#78828B; --rule:#2C3339; --grid:#252C32;
+ --w:#D9762E; --w-soft:#38240F; --fluid:#12A2BA; --fluid-soft:#0F2E37;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.6;
+ -webkit-font-smoothing:antialiased}
+.v{font-family:"Source Serif 4",Georgia,serif;font-style:italic}
+.wrap{max-width:1140px;margin:0 auto;padding:22px 24px 60px}
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:16px}
+.eyebrow{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+ font-weight:600;margin:0 0 2px}
+h1{font-family:Archivo,sans-serif;font-size:25px;font-weight:700;letter-spacing:-.02em;margin:0}
+.tbtn{font:inherit;font-size:12px;background:var(--surface);color:var(--ink-2);
+ border:1px solid var(--rule);border-radius:7px;padding:6px 11px;cursor:pointer}
+.tbtn:hover{color:var(--ink)}
+.rail{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:12px;margin-bottom:18px}
+.item{font:inherit;font-size:12.5px;background:none;border:1px solid transparent;border-radius:7px;
+ padding:6px 11px;color:var(--ink-3);cursor:pointer;white-space:nowrap}
+.item:hover{color:var(--ink-2);background:var(--surface-2)}
+.item[aria-current="true"]{color:var(--ink);background:var(--surface);border-color:var(--rule);font-weight:600}
+.item b{font-variant-numeric:tabular-nums;color:var(--ink-3);font-weight:600;margin-right:6px}
+.item[aria-current="true"] b{color:var(--fluid)}
+.panel{display:none} .panel.on{display:block}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:20px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:11px;padding:16px 18px;box-shadow:var(--shadow)}
+.card.tight{padding:12px}
+h2{font-family:Archivo,sans-serif;font-size:19px;font-weight:600;letter-spacing:-.01em;margin:0 0 6px}
+h3{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);font-weight:600;margin:0 0 8px}
+p{margin:0 0 11px}
+.lede{color:var(--ink-2);font-size:14.5px;margin:0 0 14px;max-width:70ch}
+.stage{position:relative;width:100%;aspect-ratio:4/3;border-radius:8px;overflow:hidden;background:var(--surface-2)}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.cap{font-size:12px;color:var(--ink-3);margin:8px 2px 0;line-height:1.5}
+.ctl{display:flex;align-items:center;gap:10px;margin:12px 0 0;flex-wrap:wrap}
+.ctl label{font-size:12.5px;color:var(--ink-2);min-width:96px}
+input[type=range]{flex:1;min-width:120px;accent-color:var(--fluid)}
+.val{font-variant-numeric:tabular-nums;font-size:12.5px;color:var(--ink);min-width:74px;text-align:right}
+.btn{font:inherit;font-size:12.5px;background:var(--surface-2);color:var(--ink);border:1px solid var(--rule);
+ border-radius:7px;padding:6px 13px;cursor:pointer}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--fluid);border-color:var(--fluid);color:#fff;font-weight:600}
+.chk{display:flex;align-items:center;gap:9px;padding:7px 9px;border:1px solid var(--rule);border-radius:8px;
+ margin-bottom:7px;cursor:pointer;background:var(--surface)}
+.chk:hover{border-color:var(--ink-3)}
+.chk input{accent-color:var(--fluid);width:15px;height:15px;margin:0}
+.chk .nm{font-size:13px}
+.chk .sw{width:17px;height:3px;border-radius:2px;flex:none}
+table.r{width:100%;border-collapse:collapse;font-size:13.5px}
+table.r td{padding:6px 0;border-bottom:1px solid var(--grid)}
+table.r tr:last-child td{border-bottom:0}
+table.r td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.eqb{border-left:3px solid var(--fluid);padding:3px 0 3px 14px;margin:14px 0}
+.eq{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-size:19px;display:block;line-height:1.7}
+.eq .op{font-style:normal;color:var(--ink-3);padding:0 .2em}
+.eq .num{font-style:normal}
+.trm{border-radius:4px;padding:1px 3px;transition:opacity .18s,background .18s}
+.trm.off{opacity:.24}
+.tT{background:var(--w-soft);color:var(--w)}
+.tC{background:var(--fluid-soft);color:var(--fluid)}
+.note{font-size:13px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--rule);
+ border-radius:8px;padding:11px 13px;margin-top:13px}
+.note b{color:var(--ink)}
+.pnav{display:flex;justify-content:space-between;gap:12px;margin-top:22px;border-top:1px solid var(--rule);padding-top:16px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);margin-top:9px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:16px;height:3px;border-radius:2px;display:block}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.eqbig{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-size:27px;line-height:1.9;
+ display:block;margin:6px 0}
+.eqmid{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-size:20px;line-height:2.1;display:block;margin:4px 0}
+.eqsm{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-size:17px;line-height:2;display:block;margin:3px 0}
+.eqbig .t,.eqmid .t,.eqsm .t{font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;font-style:normal;font-size:13px;color:var(--ink-2);padding-left:14px}
+.frac{display:inline-block;vertical-align:-.72em;text-align:center;font-size:.86em;margin:0 .1em}
+.frac>span{display:block;padding:0 .34em}
+.frac>span.n{border-bottom:1.3px solid currentColor}
+.tg{border-radius:4px;padding:2px 5px;transition:opacity .16s,background .16s}
+.tg.off{opacity:.2}
+.g1{background:var(--w-soft);color:var(--w)} .g2{background:var(--fluid-soft);color:var(--fluid)}
+.g3{background:var(--surface-2);color:var(--ink)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13.5px;align-items:baseline}
+.kv dt{color:var(--ink-2)} .kv dd{margin:0;font-variant-numeric:tabular-nums;font-weight:500}
+ul.f{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-2)}
+ul.f li{margin-bottom:9px} ul.f li b{color:var(--ink);font-weight:600}
+.dl{font-size:13.5px;line-height:1.65}
+.dl .h{display:block;color:var(--ink);font-weight:600;font-size:12.5px;margin-top:11px}
+.dl .h:first-child{margin-top:0}
+</style></head>
+<body>
+<div class="wrap">
+<header>
+ <div><p class="eyebrow">CIVL 2050 &middot; the governing equation</p><h1>The Navier&ndash;Stokes equations</h1></div>
+ <button class="tbtn" id="theme" type="button">Theme</button>
+</header>
+
+<nav class="rail" id="rail" aria-label="Steps"></nav>
+
+<!-- 1 -->
+<section class="panel" data-p="0">
+ <p class="lede">The equation is Newton's second law written for a fluid. The left side is the acceleration field from the previous class, multiplied by density.</p>
+ <div class="card">
+  <span class="eqbig"><span class="v">&#961;</span><span class="frac"><span class="n"><span class="v">D</span><b class="v">V</b></span><span><span class="v">Dt</span></span></span>
+   <span class="op">=</span> &minus;&nabla;<span class="v">p</span> <span class="op">+</span> <span class="v">&#956;</span>&nabla;<sup>2</sup><b class="v">V</b> <span class="op">+</span> <span class="v">&#961;</span><b class="v">g</b></span>
+  <span class="eqmid" style="margin-top:14px"><span class="frac"><span class="n"><span class="v">D</span><b class="v">V</b></span><span><span class="v">Dt</span></span></span>
+   <span class="op">=</span> <span class="frac"><span class="n">&part;<b class="v">V</b></span><span>&part;<span class="v">t</span></span></span> <span class="op">+</span> (<b class="v">V</b>&middot;&nabla;)<b class="v">V</b></span>
+ </div>
+ <div class="grid" style="margin-top:18px">
+  <div class="card">
+   <h3>Reading the terms</h3>
+   <div class="dl">
+    <span class="h"><span class="v">&#961;</span> <span class="v">D</span><b class="v">V</b>/<span class="v">Dt</span></span>
+    Mass per unit volume times the acceleration of a fluid particle. This is the quantity computed for the street-sign field.
+    <span class="h">&minus;&nabla;<span class="v">p</span></span>
+    Net pressure force per unit volume. Pressure pushes from high to low, which is the source of the minus sign.
+    <span class="h"><span class="v">&#956;</span>&nabla;<sup>2</sup><b class="v">V</b></span>
+    Net viscous force per unit volume. Proportional to the curvature of the velocity profile.
+    <span class="h"><span class="v">&#961;</span><b class="v">g</b></span>
+    Body force per unit volume, gravity in this course.
+   </div>
+  </div>
+  <div class="card">
+   <h3>Status of each side</h3>
+   <p style="font-size:13.5px;margin:0 0 10px">The right side is a sum of forces per unit volume. The left side is mass per unit volume times acceleration. The equation states <span class="v">F</span> = <span class="v">ma</span> for a differential element of fluid.</p>
+   <p style="font-size:13.5px;margin:0">Three unknown velocity components and pressure make four unknowns. The three components of this equation plus conservation of mass give four equations.</p>
+  </div>
+ </div>
+ <div class="pnav"><span></span><button class="btn primary" data-go="1" type="button">The x component &rarr;</button></div>
+</section>
+
+<!-- 2 -->
+<section class="panel" data-p="1">
+ <p class="lede">The <span class="v">x</span> component, written out. Each checkbox removes one group of terms and names the equation that remains.</p>
+ <div class="card">
+  <span class="eqmid">
+   <span class="v">&#961;</span>(
+   <span class="tg g1 t1">&part;<span class="v">u</span>/&part;<span class="v">t</span></span>
+   <span class="op">+</span>
+   <span class="tg g2 t2"><span class="v">u</span>&part;<span class="v">u</span>/&part;<span class="v">x</span> <span class="op">+</span> <span class="v">v</span>&part;<span class="v">u</span>/&part;<span class="v">y</span> <span class="op">+</span> <span class="v">w</span>&part;<span class="v">u</span>/&part;<span class="v">z</span></span>
+   ) <span class="op">=</span>
+   <span class="tg g3 t3">&minus;&part;<span class="v">p</span>/&part;<span class="v">x</span></span>
+   <span class="op">+</span>
+   <span class="tg g3 t4"><span class="v">&#956;</span>(&part;<sup>2</sup><span class="v">u</span>/&part;<span class="v">x</span><sup>2</sup> <span class="op">+</span> &part;<sup>2</sup><span class="v">u</span>/&part;<span class="v">y</span><sup>2</sup> <span class="op">+</span> &part;<sup>2</sup><span class="v">u</span>/&part;<span class="v">z</span><sup>2</sup>)</span>
+   <span class="op">+</span>
+   <span class="tg g3 t5"><span class="v">&#961;g</span><sub>x</sub></span>
+  </span>
+ </div>
+ <div class="grid" style="margin-top:18px">
+  <div class="card">
+   <h3>Terms in use</h3>
+   <label class="chk"><input type="checkbox" id="x1" checked><span class="sw" style="background:var(--w)"></span><span class="nm">Local acceleration &part;<span class="v">u</span>/&part;<span class="v">t</span></span></label>
+   <label class="chk"><input type="checkbox" id="x2" checked><span class="sw" style="background:var(--fluid)"></span><span class="nm">Convective acceleration</span></label>
+   <label class="chk"><input type="checkbox" id="x3" checked><span class="sw" style="background:var(--ink-3)"></span><span class="nm">Pressure gradient</span></label>
+   <label class="chk"><input type="checkbox" id="x4" checked><span class="sw" style="background:var(--ink-3)"></span><span class="nm">Viscous term</span></label>
+   <label class="chk"><input type="checkbox" id="x5" checked><span class="sw" style="background:var(--ink-3)"></span><span class="nm">Body force</span></label>
+  </div>
+  <div class="card">
+   <h3>Resulting equation</h3>
+   <p id="xn" style="font-family:Archivo,sans-serif;font-size:21px;font-weight:600;margin:0 0 8px">Navier&ndash;Stokes</p>
+   <p id="xd" style="font-size:13.5px;color:var(--ink-2);margin:0">All terms retained.</p>
+  </div>
+ </div>
+ <div class="pnav"><button class="btn" data-go="0" type="button">&larr; Back</button><button class="btn primary" data-go="2" type="button">Fluid statics &rarr;</button></div>
+</section>
+
+<!-- 3 -->
+<section class="panel" data-p="2">
+ <p class="lede">Setting <b class="v">V</b> = 0 everywhere removes every term that contains a velocity. What remains is the whole of Classes 02 to 04.</p>
+ <div class="card">
+  <span class="eqmid"><span class="v">&#961;</span>(
+   <span class="tg g1 off">&part;<span class="v">u</span>/&part;<span class="v">t</span></span> <span class="op">+</span>
+   <span class="tg g2 off"><span class="v">u</span>&part;<span class="v">u</span>/&part;<span class="v">x</span> <span class="op">+</span> <span class="v">v</span>&part;<span class="v">u</span>/&part;<span class="v">y</span> <span class="op">+</span> <span class="v">w</span>&part;<span class="v">u</span>/&part;<span class="v">z</span></span>
+   ) <span class="op">=</span> &minus;&part;<span class="v">p</span>/&part;<span class="v">x</span> <span class="op">+</span>
+   <span class="tg g3 off"><span class="v">&#956;</span>&nabla;<sup>2</sup><span class="v">u</span></span> <span class="op">+</span> <span class="v">&#961;g</span><sub>x</sub></span>
+  <span class="eqmid" style="margin-top:10px">&nabla;<span class="v">p</span> <span class="op">=</span> <span class="v">&#961;</span><b class="v">g</b></span>
+ </div>
+ <div class="grid" style="margin-top:18px">
+  <div class="card">
+   <h3>Component by component</h3>
+   <span class="eqsm">&part;<span class="v">p</span>/&part;<span class="v">x</span> <span class="op">=</span> 0</span>
+   <span class="eqsm">&part;<span class="v">p</span>/&part;<span class="v">y</span> <span class="op">=</span> 0</span>
+   <span class="eqsm">d<span class="v">p</span>/d<span class="v">z</span> <span class="op">=</span> &minus;<span class="v">&#961;g</span></span>
+   <p style="font-size:13.5px;color:var(--ink-2);margin:10px 0 0">With <span class="v">z</span> measured upward. Pressure is constant in any horizontal plane and varies only with depth.</p>
+  </div>
+  <div class="card">
+   <h3>What was used in Classes 02 to 04</h3>
+   <p style="font-size:13.5px;margin:0 0 9px">Integrating d<span class="v">p</span>/d<span class="v">z</span> = &minus;<span class="v">&#961;g</span> for constant density gives <span class="v">p</span> = <span class="v">&#961;gh</span>, the linear pressure distribution used for manometry, plane surfaces, curved surfaces and buoyancy.</p>
+   <p style="font-size:13.5px;margin:0">The viscous term vanishes in statics regardless of viscosity, because it acts on velocity gradients and there is no velocity. Water and honey have identical pressure distributions at rest.</p>
+  </div>
+ </div>
+ <div class="pnav"><button class="btn" data-go="1" type="button">&larr; Back</button><button class="btn primary" data-go="3" type="button">Bernoulli &rarr;</button></div>
+</section>
+
+<!-- 4 -->
+<section class="panel" data-p="3">
+ <p class="lede">Three assumptions reduce the equation to the form used in Class 07. Steady flow, no viscosity, constant density, integrated along a streamline.</p>
+ <div class="card">
+  <span class="eqmid"><span class="v">&#961;</span>(
+   <span class="tg g1 off">&part;<span class="v">u</span>/&part;<span class="v">t</span></span> <span class="op">+</span>
+   <span class="tg g2"><span class="v">u</span>&part;<span class="v">u</span>/&part;<span class="v">x</span> <span class="op">+</span> <span class="v">v</span>&part;<span class="v">u</span>/&part;<span class="v">y</span> <span class="op">+</span> <span class="v">w</span>&part;<span class="v">u</span>/&part;<span class="v">z</span></span>
+   ) <span class="op">=</span> &minus;&part;<span class="v">p</span>/&part;<span class="v">x</span> <span class="op">+</span>
+   <span class="tg g3 off"><span class="v">&#956;</span>&nabla;<sup>2</sup><span class="v">u</span></span> <span class="op">+</span> <span class="v">&#961;g</span><sub>x</sub></span>
+  <span class="eqmid" style="margin-top:12px"><span class="v">p</span> <span class="op">+</span> &frac12;<span class="v">&#961;V</span><sup>2</sup> <span class="op">+</span> <span class="v">&#961;gz</span> <span class="op">=</span> constant along a streamline</span>
+ </div>
+ <div class="grid" style="margin-top:18px">
+  <div class="card">
+   <h3>What each assumption removes</h3>
+   <ul class="f">
+    <li><b>Steady.</b> &part;/&part;<span class="v">t</span> = 0 removes the local acceleration.</li>
+    <li><b>Inviscid.</b> <span class="v">&#956;</span> = 0 removes the viscous term. This is the assumption that fails near solid surfaces.</li>
+    <li><b>Incompressible.</b> <span class="v">&#961;</span> constant allows it to be taken inside the derivatives during integration.</li>
+    <li><b>Along a streamline.</b> The convective term integrates to &frac12;<span class="v">&#961;V</span><sup>2</sup> only along the direction of motion.</li>
+   </ul>
+  </div>
+  <div class="card">
+   <h3>Where the kinetic term comes from</h3>
+   <p style="font-size:13.5px;margin:0 0 9px">Along a streamline the convective group reduces to <span class="v">V</span> d<span class="v">V</span>/d<span class="v">s</span>, and <span class="v">V</span> d<span class="v">V</span> = d(&frac12;<span class="v">V</span><sup>2</sup>). Integrating gives the &frac12;<span class="v">&#961;V</span><sup>2</sup> term.</p>
+   <p style="font-size:13.5px;margin:0">The pressure gradient integrates to <span class="v">p</span> and the body force to <span class="v">&#961;gz</span>. Bernoulli is the Navier&ndash;Stokes equation with two terms deleted and the rest integrated once.</p>
+  </div>
+ </div>
+ <div class="pnav"><button class="btn" data-go="2" type="button">&larr; Back</button><button class="btn primary" data-go="4" type="button">The open question &rarr;</button></div>
+</section>
+
+<!-- 5 -->
+<section class="panel" data-p="4">
+ <p class="lede">Two terms compete. The convective term concentrates velocity; the viscous term spreads it out. The open question is whether concentration can win completely in finite time.</p>
+ <div class="grid">
+  <div>
+   <div class="card tight"><div class="stage" style="aspect-ratio:16/9"><canvas id="cq"></canvas></div></div>
+   <p class="cap">Peak speed against time for two possible behaviours, starting from the same smooth initial condition.</p>
+  </div>
+  <div>
+   <div class="card">
+    <h3>The two outcomes</h3>
+    <div class="dl">
+     <span class="h">Regularity</span>
+     The peak speed stays finite for all time. The solution remains smooth and the equation keeps predicting.
+     <span class="h">Blowup</span>
+     The peak speed reaches infinity at a finite time <span class="v">T</span>. Beyond <span class="v">T</span> the equation has no solution in the usual sense.
+    </div>
+   </div>
+   <div class="card" style="margin-top:14px">
+    <h3>Why it is not obvious</h3>
+    <p style="font-size:13.5px;margin:0 0 9px">Stretching a vortex tube conserves its angular momentum, so thinning the tube speeds up its rotation. That is the concentrating mechanism, and it is contained in the convective term.</p>
+    <p style="font-size:13.5px;margin:0">Viscosity acts against it, and acts more strongly at smaller scales. Which one dominates as the scale shrinks is not settled by any known argument in three dimensions. In two dimensions vortex stretching does not occur and regularity is proved.</p>
+   </div>
+  </div>
+ </div>
+ <div class="pnav"><button class="btn" data-go="3" type="button">&larr; Back</button><button class="btn primary" data-go="5" type="button">The construction &rarr;</button></div>
+</section>
+
+<!-- 6 -->
+<section class="panel" data-p="5">
+ <p class="lede">A Burgers vortex is the standard picture of three effects in balance: axial straining, inward convection of vorticity, and outward viscous diffusion. The core settles at a fixed radius. The 2026 construction is the case where the balance fails.</p>
+ <div class="grid">
+  <div>
+   <div class="card tight"><div class="stage" style="aspect-ratio:7/5"><canvas id="cv"></canvas></div></div>
+   <div class="ctl">
+    <button class="btn primary" id="vwS" type="button" aria-pressed="true">Meridional section</button>
+    <button class="btn" id="vw3" type="button" aria-pressed="false">Three-dimensional</button>
+   </div>
+   <div class="ctl" id="regrow">
+    <button class="btn" id="rgA" type="button" aria-pressed="true">Burgers vortex, steady</button>
+    <button class="btn primary" id="rgB" type="button" aria-pressed="false">Collapsing vortex</button>
+   </div>
+   <div class="ctl" id="taurow" style="opacity:.35">
+    <label>Time remaining <span class="v">&#964;</span></label>
+    <input type="range" id="sv" min="0" max="220" value="0" disabled>
+    <span class="val" id="vv">1.00</span>
+   </div>
+   <div class="ctl" id="objrow" style="display:none">
+    <button class="btn primary" id="obP" type="button" aria-pressed="true">Particle path</button>
+    <button class="btn" id="obM" type="button" aria-pressed="false">Material line</button>
+    <button class="btn" id="obW" type="button" aria-pressed="false">Vortex lines</button>
+   </div>
+   <div class="ctl" id="t3row" style="display:none">
+    <label>Elapsed <span class="v">at</span></label>
+    <input type="range" id="s3" min="0" max="300" value="240">
+    <span class="val" id="v3">2.40</span>
+   </div>
+  </div>
+  <div>
+   <div id="colS">
+   <div class="card" id="cardA">
+    <h3>Burgers vortex</h3>
+    <p style="font-size:13.5px;margin:0 0 9px">An exact steady solution of the Navier&ndash;Stokes equations. The outer flow is a uniform straining field that carries vorticity inward while viscosity spreads it back out.</p>
+    <span class="eqsm"><span class="v">u</span><sub>r</sub> <span class="op">=</span> &minus;<span class="v">ar</span>/2 <span class="op">,</span> <span class="v">u</span><sub>z</sub> <span class="op">=</span> <span class="v">az</span></span>
+    <p style="font-size:13.5px;margin:9px 0 9px">This is three-dimensional, not planar. In Cartesian components it is (&minus;<span class="v">ax</span>/2, &minus;<span class="v">ay</span>/2, <span class="v">az</span>): equal contraction in both transverse directions at rate <span class="v">a</span>/2, extension along the axis at rate <span class="v">a</span>. There is no <span class="v">z</span> in <span class="v">u</span><sub>r</sub>, so the inflow is radial at every height, and <span class="v">u</span><sub>z</sub> = <span class="v">az</span> vanishes on the plane <span class="v">z</span> = 0, which is where the outflow divides.</p>
+    <span class="eqsm"><span class="v">r</span><sup>2</sup><span class="v">z</span> <span class="op">=</span> constant<span class="t">meridional streamlines</span></span>
+    <p style="font-size:13.5px;margin:9px 0 9px">That is the axisymmetric counterpart of <span class="v">xy</span> = <span class="v">C</span> from the street-sign problem. The exponent differs only because the contraction is shared between two transverse directions instead of one.</p>
+    <span class="eqsm"><span class="v">&#948;</span> <span class="op">=</span> 2<span class="rt">&#8730;</span>(<span class="v">&#957;</span>/<span class="v">a</span>)</span>
+    <p style="font-size:13.5px;margin:9px 0 0">The core radius is fixed by the balance and does not change with time. The Burgers vortex is a line vortex, unbounded in <span class="v">z</span>; the length of the tube drawn here is a drawing choice and carries no physics. Only <span class="v">&#948;</span> is set by the equations.</p>
+   </div>
+   <div class="card" id="cardB" style="display:none">
+    <h3>The collapsing case</h3>
+    <p style="font-size:13.5px;margin:0 0 9px">With a smooth forcing term supplying circulation, the inward transport outruns the outward diffusion. The core radius is no longer fixed. Writing <span class="v">&#964;</span> = 1 &minus; <span class="v">t</span>, with <span class="v">h</span> &lt; 1/100:</p>
+    <span class="eqsm">core radius <span class="v">&#948;</span> <span class="op">~</span> <span class="v">&#964;</span><sup>1/2</sup></span>
+    <span class="eqsm">core height <span class="op">~</span> <span class="v">&#964;</span><sup>1/2&minus;<span class="v">h</span></sup></span>
+    <span class="eqsm">swirl speed <span class="v">u</span><sub>&#952;</sub> <span class="op">~</span> <span class="v">&#964;</span><sup>&minus;1/2&minus;<span class="v">h</span></sup></span>
+    <span class="eqsm">peak vorticity <span class="v">u</span><sub>&#952;</sub>/<span class="v">&#948;</span> <span class="op">~</span> <span class="v">&#964;</span><sup>&minus;1&minus;<span class="v">h</span></sup></span>
+    <span class="eqsm">circulation <span class="v">&#915;</span> <span class="op">~</span> <span class="v">&#964;</span><sup>&minus;<span class="v">h</span></sup></span>
+    <span class="eqsm">core energy <span class="op">~</span> <span class="v">&#964;</span><sup>1/2&minus;3<span class="v">h</span></sup></span>
+    <p style="font-size:13.5px;margin:9px 0 0">Radius and height carry almost the same exponent, so the region shrinks in all three directions at once and keeps its shape. That is the scaling of the equations themselves: the Navier&ndash;Stokes equations are invariant under <span class="v">x</span> &rarr; <span class="v">&#955;x</span>, <span class="v">t</span> &rarr; <span class="v">&#955;</span><sup>2</sup><span class="v">t</span>, <b class="v">u</b> &rarr; <b class="v">u</b>/<span class="v">&#955;</span>, and an exactly self-similar blow-up concentrates on lengths <span class="v">&#964;</span><sup>1/2</sup> in every direction. The exponent <span class="v">h</span> is the departure from that.</p>
+    <p style="font-size:13.5px;margin:9px 0 0">The shrinking box is a region of space, not a lump of fluid. Fluid is stretched along the axis and leaves through the ends the whole time. What contracts is the region in which the vorticity is concentrated.</p>
+    <p style="font-size:13.5px;margin:9px 0 0"><span class="v">u</span><sub>&#952;</sub> grows faster than <span class="v">&#948;</span> shrinks, so the vorticity in the core diverges. A singularity requires exactly that.</p>
+   </div>
+   <div class="card" style="margin-top:14px">
+    <h3>Relative to <span class="v">&#964;</span> = 1</h3>
+    <dl class="kv">
+     <dt>Core radius <span class="v">&#948;</span></dt><dd id="q1">1.00</dd>
+     <dt>Core height</dt><dd id="q3">1.00</dd>
+     <dt>Swirl speed <span class="v">u</span><sub>&#952;</sub></dt><dd id="q2">1.00</dd>
+     <dt>Peak vorticity <span class="v">u</span><sub>&#952;</sub>/<span class="v">&#948;</span></dt><dd id="q6">1.00</dd>
+     <dt>Circulation <span class="v">&#915;</span></dt><dd id="q5">1.00</dd>
+     <dt>Core kinetic energy</dt><dd id="q4">1.00</dd>
+    </dl>
+   </div>
+   <div class="note">The speed diverges while the kinetic energy in the core tends to zero, because the volume shrinks faster than the speed grows. The circulation grows, which a freely evolving vortex cannot do. That is what the forcing term supplies, and it is why the result applies to the forced equations only.</div>
+   </div>
+
+   <div id="colC" style="display:none">
+   <div class="card">
+    <h3>The steady Burgers vortex in three dimensions</h3>
+    <p style="font-size:13.5px;margin:0 0 9px">The full velocity field, with <span class="v">&#948;</span> = 2<span class="rt">&#8730;</span>(<span class="v">&#957;</span>/<span class="v">a</span>):</p>
+    <span class="eqsm"><span class="v">u</span><sub>r</sub> <span class="op">=</span> &minus;<span class="v">ar</span>/2 <span class="op">,</span> <span class="v">u</span><sub>z</sub> <span class="op">=</span> <span class="v">az</span></span>
+    <span class="eqsm"><span class="v">u</span><sub>&#952;</sub> <span class="op">=</span> <span class="frac"><span class="n"><span class="v">&#915;</span></span><span>2&#960;<span class="v">r</span></span></span> [1 &minus; <span class="v">e</span><sup>&minus;<span class="v">r</span><sup>2</sup>/<span class="v">&#948;</span><sup>2</sup></sup>]</span>
+    <p style="font-size:13.5px;margin:9px 0 0">The field is steady, so streamlines, pathlines and streaklines coincide. Because <span class="v">u</span><sub>&#952;</sub> is present, those lines are helices, not the plane curves of the meridional view. Outside the core <span class="v">u</span><sub>&#952;</sub> &#8776; <span class="v">&#915;</span>/2&#960;<span class="v">r</span> and the angular rate <span class="v">u</span><sub>&#952;</sub>/<span class="v">r</span> goes as 1/<span class="v">r</span><sup>2</sup>; inside it the bracket &#8776; <span class="v">r</span><sup>2</sup>/<span class="v">&#948;</span><sup>2</sup> and the angular rate is constant, so the core turns as a solid body.</p>
+    <p style="font-size:13.5px;margin:9px 0 0">Radius and height on the figure are in units of <span class="v">&#948;</span>, time in units of 1/<span class="v">a</span>. Radial position follows <span class="v">r</span> = <span class="v">r</span><sub>0</sub><span class="v">e</span><sup>&minus;<span class="v">at</span>/2</sup> and axial position <span class="v">z</span> = <span class="v">z</span><sub>0</sub><span class="v">e</span><sup><span class="v">at</span></sup> exactly. The swirl strength is set to <span class="v">&#915;</span>/2&#960; = 10<span class="v">a&#948;</span><sup>2</sup>.</p>
+   </div>
+   <div class="card" id="cardP" style="margin-top:14px">
+    <h3>Particle path</h3>
+    <p style="font-size:13.5px;margin:0 0 0">One particle released far from the axis, close to the plane <span class="v">z</span> = 0. It is drawn inward at an exponential rate, and its angular rate rises as 1/<span class="v">r</span><sup>2</sup>, so the turns become tighter as it approaches the core. At the same time <span class="v">u</span><sub>z</sub> = <span class="v">az</span> carries it away from the midplane, exponentially. The curve traced is a helix of decreasing radius and increasing pitch. Nothing about the vortex itself is changing; the flow is steady.</p>
+   </div>
+   <div class="card" id="cardM" style="display:none;margin-top:14px">
+    <h3>Material line</h3>
+    <p style="font-size:13.5px;margin:0 0 0">A straight line of dyed fluid laid out radially at <span class="v">t</span> = 0, shown dashed, and the same fluid particles at the elapsed time. Every particle on the line rotates at its own rate, faster at smaller <span class="v">r</span>, so the line is wound into a spiral. Its length grows without bound while the fluid it is made of stays the same. The whole line also rises, because <span class="v">u</span><sub>z</sub> depends only on <span class="v">z</span>.</p>
+   </div>
+   <div class="card" id="cardW" style="display:none;margin-top:14px">
+    <h3>Vortex lines</h3>
+    <p style="font-size:13.5px;margin:0 0 9px">In this flow the vorticity is purely axial:</p>
+    <span class="eqsm"><span class="v">&#969;</span><sub>z</sub> <span class="op">=</span> <span class="frac"><span class="n"><span class="v">&#915;</span></span><span>&#960;<span class="v">&#948;</span><sup>2</sup></span></span><span class="v">e</span><sup>&minus;<span class="v">r</span><sup>2</sup>/<span class="v">&#948;</span><sup>2</sup></sup></span>
+    <p style="font-size:13.5px;margin:9px 0 0">so the vortex lines are straight and parallel to the axis. They are carried with the fluid: each is pulled inward and stretched along <span class="v">z</span>. A segment of length <span class="v">L</span> becomes <span class="v">Le</span><sup><span class="v">at</span></sup> while the bundle's cross-section shrinks as <span class="v">e</span><sup>&minus;<span class="v">at</span></sup>, so the flux through it is unchanged and <span class="v">&#969;</span> grows in the same proportion as the length. This is the term <span class="v">&#969;</span>&middot;&nabla;<b class="v">u</b> in the vorticity equation, drawn rather than written. It is the only mechanism by which vorticity can be amplified, and it is what viscous diffusion opposes.</p>
+   </div>
+   </div>
+  </div>
+ </div>
+ <div class="pnav"><button class="btn" data-go="4" type="button">&larr; Back</button><button class="btn primary" data-go="6" type="button">Status &rarr;</button></div>
+</section>
+
+<!-- 7 -->
+<section class="panel" data-p="6">
+ <p class="lede">Facts as of 15 September 2026.</p>
+ <div class="grid">
+  <div class="card">
+   <h3>What was proved</h3>
+   <ul class="f">
+    <li>For every viscosity <span class="v">&#957;</span> &gt; 0 there exists a smooth, compactly supported forcing term <b class="v">f</b> and a solution on &#8477;<sup>3</sup> &times; [0, 1) with zero initial velocity.</li>
+    <li>The solution has bounded kinetic energy at all times and its peak speed tends to infinity as <span class="v">t</span> &rarr; 1.</li>
+    <li>The forcing term is part of the construction, not an artefact. The result does not apply to the unforced equations.</li>
+   </ul>
+  </div>
+  <div class="card">
+   <h3>What remains open</h3>
+   <ul class="f">
+    <li>The Clay Millennium problem concerns the unforced equations. That case is unresolved.</li>
+    <li>The Clay Mathematics Institute recorded the status as active on 11 September 2026 and requires peer-reviewed publication before any award.</li>
+    <li>A Lean formalisation has been released. Independent verification is not complete.</li>
+   </ul>
+  </div>
+ </div>
+ <div class="card" style="margin-top:18px">
+  <h3>Attribution</h3>
+  <ul class="f" style="columns:2;column-gap:34px">
+   <li>Tristan Buckmaster and Levent Alp&#246;ge completed related work on the Euler equations on 22 August 2026 and contacted OpenAI on 2 and 3 September.</li>
+   <li>OpenAI stated on 10 September that de-identified data derived from their sessions may have entered its training data and may have improved the model used.</li>
+   <li>OpenAI states that its researchers did not use their prompts or proofs to direct the work. Whether the choice of research direction was influenced is disputed.</li>
+   <li>The construction follows a programme due to Diego C&#243;rdoba and Luis Mart&#237;nez-Zoroa. Citations to that work were added after the first release.</li>
+  </ul>
+ </div>
+ <div class="card" style="margin-top:18px">
+  <h3>References</h3>
+  <ul class="f">
+   <li>D. C&#243;rdoba and L. Mart&#237;nez-Zoroa, <i>Finite time singularities of smooth solutions for the 2D incompressible porous media (IPM) equation with a smooth source</i>, arXiv:2410.22920. The programme the construction follows.</li>
+   <li>L. Alp&#246;ge, T. Buckmaster and M. P. Coiculescu, <i>Extending the C&#243;rdoba&ndash;Mart&#237;nez-Zoroa IPM blow-up to uniformly space-time smooth forcing</i>, arXiv:2609.16470. Finite-time blow-up for IPM on the two-dimensional torus with a forcing term smooth in space and time; the density gradient and the velocity gradient diverge in the supremum norm as <span class="v">t</span> &rarr; 1, while the density itself stays bounded in every H&#246;lder class below <span class="v">C</span><sup>1</sup>.</li>
+   <li>Clay Mathematics Institute, Navier&#8211;Stokes existence and smoothness, problem statement and status.</li>
+  </ul>
+ </div>
+ <div class="pnav"><button class="btn" data-go="5" type="button">&larr; Back</button><span></span></div>
+</section>
+
+</div>
+<script>
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i)};
+function C(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+
+/* ---- panel 2 ---- */
+function classify(){
+  var a=$("x1").checked,b=$("x2").checked,p=$("x3").checked,vv=$("x4").checked,g=$("x5").checked;
+  if(!p) return ["Not a standard form","The pressure gradient is retained in every standard reduction of this equation."];
+  if(!a&&!b&&!vv) return ["Fluid statics","&nabla;p = &rho;g. The case covered in Classes 02 to 04."];
+  if(!a&&!b) return ["Stokes flow","Inertia neglected. Valid at very low Reynolds number."];
+  if(!vv&&(a||b)) return ["Euler equations","Viscosity neglected. Bernoulli follows from this, in Class 07."];
+  if(!a) return ["Steady Navier–Stokes","Time derivative removed. The flow pattern does not change with time."];
+  if(!g) return ["Navier–Stokes, no body force","Used where gravity is absorbed into a modified pressure."];
+  return ["Navier–Stokes","All terms retained."];
+}
+function paintX(){
+  ["x1","x2","x3","x4","x5"].forEach(function(id,i){
+    var on=$(id).checked;
+    [].forEach.call(document.querySelectorAll(".t"+(i+1)),function(el){
+      el.classList.toggle("off",!on);
+    });
+  });
+  var r=classify(); $("xn").textContent=r[0]; $("xd").innerHTML=r[1];
+}
+["x1","x2","x3","x4","x5"].forEach(function(i){$(i).addEventListener("change",paintX)});
+
+/* ---- canvas helpers ---- */
+function fit(cv){
+  var d=window.devicePixelRatio||1, r=cv.getBoundingClientRect();
+  var W=Math.max(1,Math.round(r.width)), H=Math.max(1,Math.round(r.height));
+  if(cv.width!==Math.round(W*d)){cv.width=Math.round(W*d);cv.height=Math.round(H*d);}
+  var g=cv.getContext("2d"); g.setTransform(d,0,0,d,0,0); g.clearRect(0,0,W,H);
+  return {g:g,W:W,H:H};
+}
+function chip(g,x,y,w,h){
+  g.save(); g.fillStyle=C("--surface-2");
+  g.beginPath(); g.rect(x,y,w,h); g.fill(); g.restore();
+}
+function arw(g,x0,y0,x1,y1,col,lw){
+  var dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy); if(L<1)return;
+  var hs=Math.min(9,3+lw*2), ux=dx/L, uy=dy/L, bx=x1-ux*hs, by=y1-uy*hs;
+  g.strokeStyle=col; g.lineWidth=lw; g.lineCap="round";
+  g.beginPath(); g.moveTo(x0,y0); g.lineTo(bx,by); g.stroke();
+  g.fillStyle=col; g.beginPath(); g.moveTo(x1,y1);
+  g.lineTo(bx-uy*hs*0.42,by+ux*hs*0.42); g.lineTo(bx+uy*hs*0.42,by-ux*hs*0.42);
+  g.closePath(); g.fill();
+}
+
+/* ---- panel 5: peak speed plot ---- */
+function drawQ(){
+  var cv=$("cq"); if(!cv||!cv.offsetWidth) return;
+  var V=fit(cv), g=V.g, L=54, R=V.W-18, T=18, B=V.H-38;
+  g.strokeStyle=C("--rule"); g.lineWidth=1.2;
+  g.beginPath(); g.moveTo(L,T); g.lineTo(L,B); g.lineTo(R,B); g.stroke();
+  g.font="12px 'IBM Plex Sans',sans-serif"; g.fillStyle=C("--ink-3");
+  g.textAlign="center"; g.textBaseline="top"; g.fillText("time",(L+R)/2,B+14);
+  g.save(); g.translate(16,(T+B)/2); g.rotate(-Math.PI/2); g.textBaseline="top";
+  g.fillText("peak speed",0,0); g.restore();
+  var Tb=0.78;
+  g.strokeStyle=C("--ink-3"); g.setLineDash([5,4]); g.lineWidth=1;
+  g.beginPath(); g.moveTo(L+(R-L)*Tb,T); g.lineTo(L+(R-L)*Tb,B); g.stroke(); g.setLineDash([]);
+  g.textAlign="center"; g.textBaseline="top"; g.fillStyle=C("--ink-3");
+  g.fillText("T",L+(R-L)*Tb,B+14);
+  var i,x,y;
+  g.strokeStyle=C("--fluid"); g.lineWidth=2.8; g.beginPath();
+  for(i=0;i<=200;i++){ x=i/200; y=1+0.55*(1-Math.exp(-3.2*x));
+    var px=L+(R-L)*x, py=B-(B-T)*(y/4.4);
+    i?g.lineTo(px,py):g.moveTo(px,py); }
+  g.stroke();
+  g.strokeStyle=C("--w"); g.lineWidth=2.8; g.beginPath();
+  for(i=0;i<=400;i++){ x=Tb*i/400; y=1/Math.pow(1-x/Tb,0.5); if(y>4.4){y=4.4;}
+    var qx=L+(R-L)*x, qy=B-(B-T)*(y/4.4);
+    i?g.lineTo(qx,qy):g.moveTo(qx,qy);
+    if(y>=4.4) break; }
+  g.stroke();
+  g.font="600 12.5px 'IBM Plex Sans',sans-serif"; g.textAlign="left"; g.textBaseline="middle";
+  g.fillStyle=C("--fluid"); g.fillText("regularity", L+(R-L)*0.62, B-(B-T)*(1.5/4.4)-14);
+  g.fillStyle=C("--w"); g.fillText("blowup", L+(R-L)*Tb-112, T+14);
+}
+
+/* ---- panel 6: Burgers schematic, steady and collapsing ---- */
+var HH=1/200, TAU=1, REG="A", VIEW="S", OBJ="P", T3=2.4, KSW=10;
+function wavy(g,x0,y,x1,col,lw){
+  var n=Math.abs(x1-x0), sgn=x1>x0?1:-1, amp=3.4, k=0.42;
+  g.strokeStyle=col; g.lineWidth=lw; g.lineCap="round"; g.beginPath();
+  for(var i=0;i<=n;i++){ var xx=x0+sgn*i, yy=y+amp*Math.sin(i*k);
+    i?g.lineTo(xx,yy):g.moveTo(xx,yy); }
+  g.stroke();
+  var hx=x1, hy=y+amp*Math.sin(n*k), h=6;
+  g.fillStyle=col; g.beginPath(); g.moveTo(hx+sgn*h,hy);
+  g.lineTo(hx,hy-h*0.5); g.lineTo(hx,hy+h*0.5); g.closePath(); g.fill();
+}
+/* ---- helical view ---- */
+function windup(r0,T){            // angle turned between t = 0 and t = T
+  if(T<=0) return 0;
+  var N=200, h=T/N, sum=0, i, t, r, f;
+  for(i=0;i<=N;i++){ t=i*h; r=r0*Math.exp(-t/2);
+    f=KSW*(1-Math.exp(-r*r))/(r*r);
+    sum += (i===0||i===N)? 0.5*f : f; }
+  return sum*h;
+}
+function key(g,V,rows){
+  var y=V.H-14-16*(rows.length-1), i;
+  g.font="11.5px 'IBM Plex Sans',sans-serif"; g.textBaseline="middle"; g.textAlign="left";
+  for(i=0;i<rows.length;i++){
+    g.save(); g.strokeStyle=rows[i][0]; g.lineWidth=2.4; g.lineCap="round";
+    if(rows[i][2]) g.setLineDash([5,4]);
+    g.beginPath(); g.moveTo(14,y+i*16); g.lineTo(34,y+i*16); g.stroke(); g.restore();
+    g.fillStyle=C("--ink-2"); g.fillText(rows[i][1], 40, y+i*16);
+  }
+}
+function draw3(){
+  var cv=$("cv"); if(!cv||!cv.offsetWidth) return;
+  var V=fit(cv), g=V.g, cx=V.W*0.5, cy=V.H*0.52;
+  var TL=0.34;
+  var RM = OBJ==="M"?3.5 : (OBJ==="W"?2.4 : 3.2);
+  var ZM = OBJ==="M"?1.4 : (OBJ==="W"?2.3 : 2.6);
+  var S=Math.min((V.W*0.5-22)/RM, (V.H*0.5-22)/(0.64*ZM+TL*RM)), Sz=S*0.64;
+  var ink=C("--ink"), ink2=C("--ink-2"), ink3=C("--ink-3"), fl=C("--fluid"), wa=C("--w");
+  function P(r,th,z){ var x=r*Math.cos(th), y=r*Math.sin(th);
+    return [cx+x*S, cy-z*Sz-y*S*TL, y]; }
+  function poly(pts,col,lw,dash){
+    g.save(); if(dash) g.setLineDash(dash);
+    g.strokeStyle=col; g.lineWidth=lw; g.lineJoin="round"; g.lineCap="round";
+    g.beginPath(); g.moveTo(pts[0][0],pts[0][1]);
+    for(var i=1;i<pts.length;i++) g.lineTo(pts[i][0],pts[i][1]);
+    g.stroke(); g.restore();
+  }
+  var T=T3;
+
+  // axis
+  g.save(); g.setLineDash([5,5]); g.strokeStyle=ink3; g.lineWidth=1;
+  g.beginPath(); g.moveTo(cx,cy-ZM*Sz); g.lineTo(cx,cy+ZM*Sz); g.stroke(); g.restore();
+  g.font="italic 13px Georgia,serif"; g.fillStyle=ink3;
+  g.textAlign="center"; g.textBaseline="bottom"; g.fillText("z", cx, cy-ZM*Sz-4);
+
+  // core, radius delta = 1
+  var i,k,a2,pts;
+  g.save(); g.globalAlpha=0.9; g.fillStyle=C("--fluid-soft");
+  g.beginPath();
+  g.moveTo(cx-S, cy-1.05*Sz); g.lineTo(cx-S, cy+1.05*Sz);
+  g.lineTo(cx+S, cy+1.05*Sz); g.lineTo(cx+S, cy-1.05*Sz); g.closePath(); g.fill();
+  g.restore();
+  [-1.05,1.05].forEach(function(zz){
+    pts=[]; for(i=0;i<=80;i++){ a2=i/80*6.2832; pts.push(P(1,a2,zz)); }
+    poly(pts, ink3, 1.1, null);
+  });
+  g.strokeStyle=ink3; g.lineWidth=1.1;
+  g.beginPath(); g.moveTo(cx-S,cy-1.05*Sz); g.lineTo(cx-S,cy+1.05*Sz);
+  g.moveTo(cx+S,cy-1.05*Sz); g.lineTo(cx+S,cy+1.05*Sz); g.stroke();
+  g.strokeStyle=ink3; g.lineWidth=1;
+  var dy0=cy+1.05*Sz;
+  g.beginPath(); g.moveTo(cx,dy0); g.lineTo(cx+S,dy0);
+  g.moveTo(cx,dy0-4); g.lineTo(cx,dy0+4);
+  g.moveTo(cx+S,dy0-4); g.lineTo(cx+S,dy0+4); g.stroke();
+  g.font="italic 13px Georgia,serif"; g.fillStyle=ink3;
+  g.textAlign="center"; g.textBaseline="top";
+  g.fillText("\u03b4", cx+S*0.5, dy0+6);
+  g.font="11px 'IBM Plex Sans',sans-serif"; g.textAlign="left"; g.textBaseline="middle";
+  g.fillText("core", cx+S+7, dy0);
+
+  if(OBJ==="P"){
+    var r0=3.0, z0=0.12, N=Math.max(2,Math.round(240*Math.max(T,0.02)/4));
+    var path=[], shad=[], th=0, dt=T/N, t2, rr, ff;
+    for(i=0;i<=N;i++){
+      t2=i*dt; rr=r0*Math.exp(-t2/2);
+      path.push(P(rr, th, z0*Math.exp(t2)));
+      shad.push(P(rr, th, 0));
+      ff=KSW*(1-Math.exp(-rr*rr))/(rr*rr); th+=ff*dt;
+    }
+    g.save(); g.globalAlpha=0.45; poly(shad, ink3, 1.2, [4,4]); g.restore();
+    // depth shading: segments behind the axis drawn lighter
+    for(i=1;i<path.length;i++){
+      var dep=(path[i][2]+path[i-1][2])*0.5;
+      g.save(); g.globalAlpha = dep>0 ? 0.42 : 1;
+      g.strokeStyle=fl; g.lineWidth = dep>0 ? 1.7 : 2.6; g.lineCap="round";
+      g.beginPath(); g.moveTo(path[i-1][0],path[i-1][1]); g.lineTo(path[i][0],path[i][1]);
+      g.stroke(); g.restore();
+    }
+    var p0=path[0], pN=path[path.length-1], sN=shad[shad.length-1];
+    g.save(); g.globalAlpha=0.6; g.strokeStyle=ink3; g.lineWidth=1; g.setLineDash([3,3]);
+    g.beginPath(); g.moveTo(pN[0],pN[1]); g.lineTo(sN[0],sN[1]); g.stroke(); g.restore();
+    g.fillStyle=ink3; g.beginPath(); g.arc(p0[0],p0[1],3,0,6.2832); g.fill();
+    g.font="11px 'IBM Plex Sans',sans-serif"; g.textAlign="right"; g.textBaseline="middle";
+    g.fillText("release, t = 0", p0[0]-7, p0[1]);
+    if(path.length>6) arw(g, path[path.length-5][0], path[path.length-5][1], pN[0], pN[1], fl, 2.6);
+    g.fillStyle=fl; g.beginPath(); g.arc(pN[0],pN[1],4.2,0,6.2832); g.fill();
+    key(g,V,[[fl,"the path of the particle",0],[ink3,"its shadow on the plane z = 0",1]]);
+    g.font="12px 'IBM Plex Sans',sans-serif"; g.fillStyle=ink2;
+    g.textAlign="right"; g.textBaseline="bottom";
+    g.fillText("r \u00d7 "+Math.exp(-T/2).toFixed(2)+"   z \u00d7 "+Math.exp(T).toFixed(1)
+      +"   turns "+(th/6.2832).toFixed(2), V.W-12, V.H-12);
+  }
+
+  if(OBJ==="M"){
+    var nM=190, rA=1.0, rB=3.4, z0M=0.05;
+    var ghost=[], cur=[];
+    for(i=0;i<=nM;i++){
+      var rq=rA+(rB-rA)*i/nM;
+      ghost.push(P(rq,0,z0M));
+      cur.push(P(rq*Math.exp(-T/2), windup(rq,T), z0M*Math.exp(T)));
+    }
+    poly(ghost, ink3, 1.4, [5,4]);
+    for(i=1;i<cur.length;i++){
+      var dp=(cur[i][2]+cur[i-1][2])*0.5;
+      g.save(); g.globalAlpha = dp>0 ? 0.42 : 1;
+      g.strokeStyle=wa; g.lineWidth = dp>0 ? 1.8 : 2.8; g.lineCap="round";
+      g.beginPath(); g.moveTo(cur[i-1][0],cur[i-1][1]); g.lineTo(cur[i][0],cur[i][1]);
+      g.stroke(); g.restore();
+    }
+    key(g,V,[[ink3,"straight line of dye at t = 0",1],[wa,"the same fluid particles now",0]]);
+    var L0=0,L1=0;
+    for(i=1;i<=nM;i++){
+      var ra=rA+(rB-rA)*(i-1)/nM, rb=rA+(rB-rA)*i/nM;
+      L0 += rb-ra;
+      var Ra=ra*Math.exp(-T/2), Rb=rb*Math.exp(-T/2);
+      var Ta=windup(ra,T), Tb=windup(rb,T);
+      var dx=Rb*Math.cos(Tb)-Ra*Math.cos(Ta), dy=Rb*Math.sin(Tb)-Ra*Math.sin(Ta);
+      L1 += Math.sqrt(dx*dx+dy*dy);
+    }
+    g.font="12px 'IBM Plex Sans',sans-serif"; g.fillStyle=ink2;
+    g.textAlign="right"; g.textBaseline="bottom";
+    g.fillText("line length \u00d7 "+(L1/L0).toFixed(2), V.W-12, V.H-12);
+  }
+
+  if(OBJ==="W"){
+    var R0=[0.5,1.1,1.9], TH0=[0.55,2.65,4.75], hz=0.10;
+    TH0.forEach(function(t0){
+      R0.forEach(function(rq){
+        var rN=rq*Math.exp(-T/2), thN=t0+windup(rq,T), hN=hz*Math.exp(T);
+        var g0=P(rq,t0,-hz), g1=P(rq,t0,hz);
+        arw(g, g0[0], g0[1], g1[0], g1[1], ink3, 1.4);
+        var c0=P(rN,thN,-hN), c1=P(rN,thN,hN);
+        var dep=c0[2];
+        g.save(); g.globalAlpha = dep>0 ? 0.45 : 1;
+        arw(g, c0[0], c0[1], c1[0], c1[1], wa, dep>0 ? 1.8 : 2.6);
+        g.restore();
+      });
+    });
+    key(g,V,[[ink3,"vortex lines at t = 0",0],[wa,"the same lines now",0]]);
+    g.font="italic 14px Georgia,serif"; g.fillStyle=wa;
+    g.textAlign="left"; g.textBaseline="middle";
+    var wl=P(R0[2]*Math.exp(-T/2), TH0[2]+windup(R0[2],T), hz*Math.exp(T));
+    g.fillText("\u03c9", wl[0]+11, wl[1]-4);
+    g.font="12px 'IBM Plex Sans',sans-serif"; g.fillStyle=ink2;
+    g.textAlign="right"; g.textBaseline="bottom";
+    g.fillText("length \u00d7 "+Math.exp(T).toFixed(1)+"   bundle radius \u00d7 "+Math.exp(-T/2).toFixed(2)
+      +"   \u03c9 \u00d7 "+Math.exp(T).toFixed(1), V.W-12, V.H-12);
+  }
+
+  // key
+  g.font="12.5px 'IBM Plex Sans',sans-serif"; g.textBaseline="top"; g.textAlign="left";
+  g.fillStyle=ink2;
+  g.fillText(OBJ==="P"?"pathline of one particle":(OBJ==="M"?"material line of dyed fluid":"vortex lines, carried with the fluid"), 12, 10);
+  g.font="11px 'IBM Plex Sans',sans-serif"; g.fillStyle=ink3;
+  g.fillText("steady flow: streamline = pathline = streakline", 12, 27);
+}
+function drawV(){
+  if(VIEW==="3") return draw3();
+  var cv=$("cv"); if(!cv||!cv.offsetWidth) return;
+  var V=fit(cv), g=V.g, cx=V.W*0.5, cy=V.H*0.5;
+  var A=0.5+HH, D=0.5-HH;
+  var collapse = (REG==="B");
+  var t = collapse? TAU : 1;
+  var rr=Math.pow(t,0.5), zz=Math.pow(t,D), uu=Math.pow(t,-A);
+  var D0=Math.min(V.W,V.H)*0.115, HC0=Math.min(V.W,V.H)*0.26;
+  var d=Math.max(1.0,D0*rr), hc=Math.max(3,HC0*zz), ry=Math.max(1.6,d*0.30);
+  var yT=cy-hc, yB=cy+hc;
+  var ink=C("--ink"), ink2=C("--ink-2"), ink3=C("--ink-3");
+
+  // outline of the tube at tau = 1, for scale
+  if(collapse && t<0.6){
+    g.save(); g.setLineDash([4,5]); g.strokeStyle=ink3; g.globalAlpha=.55; g.lineWidth=1;
+    g.beginPath(); g.moveTo(cx-D0,cy-HC0); g.lineTo(cx-D0,cy+HC0);
+    g.moveTo(cx+D0,cy-HC0); g.lineTo(cx+D0,cy+HC0); g.stroke();
+    g.beginPath(); g.ellipse(cx,cy-HC0,D0,D0*0.30,0,0,6.2832); g.stroke();
+    g.beginPath(); g.ellipse(cx,cy+HC0,D0,D0*0.30,0,0,6.2832); g.stroke();
+    g.setLineDash([]); g.font="11px 'IBM Plex Sans',sans-serif"; g.fillStyle=ink3;
+    g.textAlign="left"; g.textBaseline="bottom";
+    g.textAlign="center"; g.textBaseline="top";
+    g.fillText("core at \u03c4 = 1", cx, cy+HC0+D0*0.30+8); g.restore();
+  }
+
+  // the tube
+  g.strokeStyle=ink; g.lineWidth=1.8;
+  g.beginPath(); g.moveTo(cx-d,yT); g.lineTo(cx-d,yB);
+  g.moveTo(cx+d,yT); g.lineTo(cx+d,yB); g.stroke();
+  g.fillStyle=C("--fluid-soft");
+  g.beginPath(); g.rect(cx-d,yT,2*d,2*hc); g.fill();
+  g.strokeStyle=ink; g.lineWidth=1.8;
+  g.beginPath(); g.ellipse(cx,yT,d,ry,0,0,6.2832); g.stroke();
+  g.save(); g.setLineDash([4,4]); g.strokeStyle=ink3; g.lineWidth=1.2;
+  g.beginPath(); g.ellipse(cx,yB,d,ry,0,0,6.2832); g.stroke(); g.restore();
+  g.strokeStyle=ink; g.lineWidth=1.8;
+  g.beginPath(); g.ellipse(cx,yB,d,ry,0,Math.PI,6.2832); g.stroke();
+
+  // axial straining, scaled with the collapse
+  var gro = collapse? Math.min(1,Math.log(uu)/Math.LN10/4) : 0;
+  var sa = 30 + 22*gro;
+  var lwS = 1.8 + 1.1*gro;
+  [-1,1].forEach(function(sx){
+    arw(g, cx+sx*d*0.55, yT-4, cx+sx*d*0.85, yT-4-sa, ink, lwS);
+    arw(g, cx+sx*d*0.55, yB+4, cx+sx*d*0.85, yB+4+sa, ink, lwS);
+  });
+  g.font="12.5px 'IBM Plex Sans',sans-serif"; g.fillStyle=ink2;
+  g.textAlign="center"; g.textBaseline="bottom";
+  g.fillText("axial straining", cx, cy-HC0-40);
+
+  // inward convection, drawn as meridional streamlines r^2 z = constant
+  var sR=D0, sZ=HC0;
+  var rmaxPx=Math.min(cx-14, V.W-cx-14), rmax=rmaxPx/sR;
+  var rr0=1;   // the outer straining field is imposed and does not change as the core collapses
+  var lwC = 1.5 + 1.0*gro;
+  [-1,1].forEach(function(sx){
+    [-1,1].forEach(function(hs){
+      [0.22,0.58,0.96].forEach(function(zw){
+        var Cc=zw*rr0*rr0, pts=[], N=110, i, rr2, zz2;
+        var rStart=Math.min(rmax, Math.sqrt(Cc/0.055));   // enter where |z| is small, so the curves fan out
+        for(i=0;i<=N;i++){
+          rr2 = rStart*Math.pow(rr0/rStart, i/N);
+          zz2 = Cc/(rr2*rr2);
+          pts.push([cx+sx*rr2*sR, cy-hs*zz2*sZ]);
+        }
+        g.strokeStyle=C("--fluid"); g.lineWidth=lwC; g.lineJoin="round";
+        g.beginPath(); g.moveTo(pts[0][0],pts[0][1]);
+        for(i=1;i<pts.length;i++) g.lineTo(pts[i][0],pts[i][1]);
+        g.stroke();
+        var p=pts[N], q=pts[N-7];
+        arw(g,q[0],q[1],p[0],p[1],C("--fluid"),lwC);
+      });
+    });
+  });
+  g.font="12.5px 'IBM Plex Sans',sans-serif"; g.textBaseline="top";
+  g.fillStyle=C("--fluid"); g.textAlign="left";
+  g.fillText("inward convection of vorticity,", 12, 10);
+  g.fillText("at every z", 12, 25);
+
+  // outward viscous diffusion
+  var lwD = 1.8 - 1.0*gro, lenD = 46 - 26*gro;
+  [-1,1].forEach(function(sx){
+    [-0.52,0.52].forEach(function(f){
+      wavy(g, cx+sx*(D0+10), cy+f*HC0, cx+sx*(D0+10+lenD), C("--w"), Math.max(1,lwD));
+    });
+  });
+  g.fillStyle=C("--w"); g.textAlign="right"; g.textBaseline="top";
+  g.fillText("outward viscous", V.W-12, 10);
+  g.fillText("diffusion", V.W-12, 25);
+
+  // swirl: the ring narrows with the core, the tangential speed grows
+  var cyS=cy, rxS=Math.max(5,d*0.62), ryS=Math.max(2.4,d*0.2);
+  var lwU = 2 + 2.4*gro;
+  g.strokeStyle=C("--ink"); g.lineWidth=lwU;
+  g.beginPath(); g.ellipse(cx,cyS,rxS,ryS,0,0,6.2832); g.stroke();
+  // sense of rotation, marked on the far side of the ring
+  var hs=4.5+2.5*gro;
+  g.fillStyle=C("--ink"); g.beginPath();
+  g.moveTo(cx-hs*1.6,cyS-ryS); g.lineTo(cx-hs*0.2,cyS-ryS-hs*0.75);
+  g.lineTo(cx-hs*0.2,cyS-ryS+hs*0.75); g.closePath(); g.fill();
+  // one particle on the near side of the ring, and its velocity, on a logarithmic length scale
+  var ax0=cx, ay0=cyS+ryS;
+  g.beginPath(); g.arc(ax0,ay0,2.6,0,6.2832); g.fill();
+  var Lu = Math.min(D0*1.35 + 34*Math.log(Math.max(1,uu)), (V.W*0.5-70));
+  arw(g, ax0+3, ay0, ax0+Lu, ay0, C("--ink"), 1.8+1.6*gro);
+  chip(g, ax0+Lu+4, ay0-9, 26, 19);
+  g.fillStyle=ink; g.textBaseline="middle"; g.textAlign="left";
+  g.font="italic 15px Georgia,serif"; g.fillText("u", ax0+Lu+7, ay0-1);
+  g.font="italic 11px Georgia,serif"; g.fillText("\u03b8", ax0+Lu+17, ay0+4);
+
+  // delta
+  var dy=cy-hc*0.33;
+  g.strokeStyle=ink3; g.lineWidth=1;
+  g.beginPath(); g.moveTo(cx,dy); g.lineTo(cx+d,dy);
+  g.moveTo(cx,dy-4); g.lineTo(cx,dy+4); g.moveTo(cx+d,dy-4); g.lineTo(cx+d,dy+4); g.stroke();
+  g.font="italic 14px Georgia,serif"; g.fillStyle=ink2;
+  g.textAlign="left"; g.textBaseline="middle"; g.fillText("\u03b4", cx+d+11, dy-1);
+
+  // r, theta, z triad
+  var tx=V.W-52, ty=V.H-22;
+  arw(g,tx,ty,tx+26,ty,ink3,1.3); arw(g,tx,ty,tx,ty-26,ink3,1.3);
+  g.font="italic 12px Georgia,serif"; g.fillStyle=ink3;
+  g.textAlign="left"; g.textBaseline="middle"; g.fillText("r",tx+30,ty);
+  g.textAlign="center"; g.textBaseline="bottom"; g.fillText("z",tx,ty-30);
+  g.beginPath(); g.arc(tx-12,ty-8,5,0,6.2832); g.stroke();
+  g.beginPath(); g.arc(tx-12,ty-8,1.8,0,6.2832); g.fill();
+  g.textAlign="right"; g.textBaseline="top"; g.fillText("\u03b8",tx-19,ty-13);
+}
+function fmtq(x){
+  if(x>=1e4||x<1e-3) return x.toExponential(2).replace("e","\u00d710^").replace("+","");
+  if(x>=100) return x.toFixed(0);
+  if(x>=10) return x.toFixed(1);
+  return x.toFixed(3);
+}
+function updV(){
+  var A=0.5+HH, D=0.5-HH, t=(REG==="B")?TAU:1;
+  $("vv").textContent = t>=0.01? t.toFixed(3) : t.toExponential(1);
+  $("q1").textContent = fmtq(Math.pow(t,0.5));
+  $("q3").textContent = fmtq(Math.pow(t,D));
+  $("q2").textContent = fmtq(Math.pow(t,-A));
+  $("q5").textContent = fmtq(Math.pow(t,-HH));
+  $("q6").textContent = fmtq(Math.pow(t,-1-HH));
+  $("q4").textContent = fmtq(Math.pow(t,-2*A+1+D));
+  drawV();
+}
+function setReg(r){
+  REG=r;
+  $("rgA").setAttribute("aria-pressed", r==="A"?"true":"false");
+  $("rgB").setAttribute("aria-pressed", r==="B"?"true":"false");
+  $("rgA").className = r==="A"?"btn primary":"btn";
+  $("rgB").className = r==="B"?"btn primary":"btn";
+  $("cardA").style.display = r==="A"?"":"none";
+  $("cardB").style.display = r==="B"?"":"none";
+  $("sv").disabled = (r!=="B");
+  $("taurow").style.opacity = (r==="B")?"1":".35";
+  updV();
+}
+function setView(v){
+  VIEW=v;
+  $("vwS").className = v==="S"?"btn primary":"btn"; $("vwS").setAttribute("aria-pressed", v==="S"?"true":"false");
+  $("vw3").className = v==="3"?"btn primary":"btn"; $("vw3").setAttribute("aria-pressed", v==="3"?"true":"false");
+  $("regrow").style.display = v==="S"?"":"none";
+  $("taurow").style.display = v==="S"?"":"none";
+  $("objrow").style.display = v==="3"?"":"none";
+  $("t3row").style.display  = v==="3"?"":"none";
+  $("colS").style.display   = v==="S"?"":"none";
+  $("colC").style.display   = v==="3"?"":"none";
+  drawV();
+}
+function setObj(o){
+  OBJ=o;
+  [["obP","P"],["obM","M"],["obW","W"]].forEach(function(e){
+    $(e[0]).className = o===e[1]?"btn primary":"btn";
+    $(e[0]).setAttribute("aria-pressed", o===e[1]?"true":"false");
+  });
+  $("cardP").style.display = o==="P"?"":"none";
+  $("cardM").style.display = o==="M"?"":"none";
+  $("cardW").style.display = o==="W"?"":"none";
+  drawV();
+}
+$("vwS").addEventListener("click",function(){setView("S")});
+$("vw3").addEventListener("click",function(){setView("3")});
+$("obP").addEventListener("click",function(){setObj("P")});
+$("obM").addEventListener("click",function(){setObj("M")});
+$("obW").addEventListener("click",function(){setObj("W")});
+$("s3").addEventListener("input",function(){
+  T3=(+this.value)/100; $("v3").textContent=T3.toFixed(2); drawV();
+});
+$("rgA").addEventListener("click",function(){setReg("A")});
+$("rgB").addEventListener("click",function(){setReg("B")});
+$("sv").addEventListener("input",function(){
+  TAU=Math.pow(10,-(+this.value)/100); updV();
+});
+
+/* ---- shell ---- */
+var STEPS=["The equation","The x component","Fluid statics","Bernoulli","The open question","The construction","Status"];
+var step=0, panels=[].slice.call(document.querySelectorAll(".panel")), rail=$("rail");
+STEPS.forEach(function(s,i){
+  var b=document.createElement("button"); b.className="item"; b.type="button";
+  b.innerHTML="<b>0"+(i+1)+"</b>"+s;
+  b.addEventListener("click",function(){go(i)}); rail.appendChild(b);
+});
+function go(i){
+  step=Math.max(0,Math.min(STEPS.length-1,i));
+  panels.forEach(function(p,j){p.classList.toggle("on",j===step)});
+  [].forEach.call(rail.children,function(b,j){b.setAttribute("aria-current",j===step?"true":"false")});
+  requestAnimationFrame(render);
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-go]"); if(b) go(+b.getAttribute("data-go"));
+});
+document.addEventListener("keydown",function(e){
+  if(e.target.tagName==="INPUT")return;
+  if(e.key==="ArrowRight")go(step+1); if(e.key==="ArrowLeft")go(step-1);
+});
+$("theme").addEventListener("click",function(){
+  var r=document.documentElement, cur=r.getAttribute("data-theme");
+  var dark=window.matchMedia("(prefers-color-scheme:dark)").matches;
+  var now=cur?cur:(dark?"dark":"light");
+  r.setAttribute("data-theme", now==="dark"?"light":"dark");
+  requestAnimationFrame(render);
+});
+function render(){ if(step===4) drawQ(); if(step===5) drawV(); }
+window.addEventListener("resize",function(){requestAnimationFrame(render)});
+paintX(); setReg("A"); go(0);
+})();
+</script>
+</body></html>

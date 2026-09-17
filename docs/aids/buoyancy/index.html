@@ -79,8 +79,8 @@ table.p td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-we
 </div></header>
 <main class="wrap">
   <p class="eyebrow">Archimedes</p>
-  <h2>The fluid cannot see what is inside.</h2>
-  <p class="lede">Pressure acts on the <strong>boundary</strong>. It depends on depth and on the fluid, and on nothing else. Swap the contents of the block for anything you like and every arrow below stays exactly where it is. Only the weight changes, and that is what decides whether it rises or sinks.</p>
+  <h2>Pressure on the boundary depends on depth, not on contents.</h2>
+  <p class="lede">Pressure acts on the <strong>boundary</strong>. It depends on depth and on the fluid, and on nothing else. Changing the contents of the block leaves every pressure arrow unchanged. Only the weight changes, and the weight determines whether the block rises or sinks.</p>
 
   <div class="grid">
     <div class="card">
@@ -121,7 +121,7 @@ table.p td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-we
         </div>
         <div class="eqbox">
           <span class="eq"><span class="v">F</span><sub>B</sub> <span class="op">=</span> <span class="v">&rho;</span><sub>f</sub><span class="v">g V</span></span>
-          <p class="eqnote">No <span class="v">&rho;</span><sub>obj</sub> anywhere in it. The buoyant force is the weight of the fluid the block displaces, not a property of the block.</p>
+          <p class="eqnote">No <span class="v">&rho;</span><sub>obj</sub> does not appear. The buoyant force is the weight of the fluid the block displaces, not a property of the block.</p>
         </div>
         <div class="note" id="insight">&mdash;</div>
       </div>
@@ -196,7 +196,7 @@ function render(){
     h.className="hero "+(floating?"up":"dn");
     $("heroLab").textContent="At rest";
     $("heroVal").textContent=floating?(100*m.r/RF).toFixed(1)+"% submerged":"On the bottom";
-    $("heroSub").innerHTML=floating?"It settled until the fluid it pushes aside weighs what it weighs.":"The floor carries the leftover <b>"+fmt(c.W-c.FB)+"</b>.";
+    $("heroSub").innerHTML=floating?"It settled at the depth where the displaced fluid weighs the same as the block.":"The floor carries the leftover <b>"+fmt(c.W-c.FB)+"</b>.";
   }
   $("floatNote").innerHTML= m.r<RF
     ? "Here "+m.r+" / 1025 = <b>"+(m.r/RF).toFixed(3)+"</b>, so "+(100*m.r/RF).toFixed(1)+"% of it sits below the waterline."
@@ -207,10 +207,10 @@ function render(){
     "<span class='v'>F</span><sub>B</sub> does not depend on depth.";
   var n=$("insight");
   if(st.changedWhileHeld&&!st.released){n.className="note hot";
-    n.innerHTML="<b>Nothing on the boundary moved.</b> You changed the contents and every pressure arrow stayed put. Only <span class='v'>W</span> changed. That is the whole of Archimedes: the fluid responds to the shape and the depth, never to what is inside it.";}
+    n.innerHTML="<b>The boundary is unchanged.</b> The contents changed and every pressure arrow stayed the same. Only <span class='v'>W</span> changed. The pressure distribution depends on the shape and the depth, not on the contents.";}
   else if(st.released&&mat().r>=RF){n.className="note";
-    n.innerHTML="Resting on the floor, the block is still buoyed by <b>"+fmt(c.FB)+"</b>. It weighs that much less here than it does in air, which is why the crane in problem 2 reads lower once the block is under.";}
-  else {n.className="note";n.innerHTML="Pick a different material. Watch the arrows rather than the numbers.";}
+    n.innerHTML="Resting on the floor, the block is still buoyed by <b>"+fmt(c.FB)+"</b>. It weighs that much less here than it does in air, so the crane in problem 2 reads lower once the block is submerged.";}
+  else {n.className="note";n.innerHTML="Select a different material. The pressure arrows do not change.";}
   [].forEach.call(document.querySelectorAll("#matSeg button"),function(b){b.setAttribute("aria-pressed",b.dataset.m===st.mat?"true":"false")});
   draw();
 }

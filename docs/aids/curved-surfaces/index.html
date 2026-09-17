@@ -86,7 +86,7 @@ table.p td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-we
 </nav></header>
 <main class="wrap">
   <p class="eyebrow" id="eyebrow">Step 1</p>
-  <h2 id="head">A curved surface you cannot integrate.</h2>
+  <h2 id="head">Pressure direction varies at every point on the surface.</h2>
   <p class="lede" id="lede"></p>
   <div class="grid">
     <div class="card">
@@ -199,23 +199,23 @@ function draw(){
   $("scene").innerHTML=o;
 }
 var COPY=[
- {e:"Step 1",h:"A curved surface you cannot integrate.",
+ {e:"Step 1",h:"Pressure direction varies at every point on the surface.",
   l:"The trough is two symmetric shells hinged at the bottom and tied by a cable at the rim. Pressure on the curve changes direction at every point, so there is no single plane to apply <span class='v'>F</span><sub>R</sub> = <span class='v'>P</span><sub>C</sub><span class='v'>A</span> to.",
   c:"Full trough, filled to the rim. We only need the right half by symmetry.",
-  n:"The trick is not to integrate over the curve at all. It is to draw a different free body."},
- {e:"Step 2",h:"Cut out a block of the water instead.",
+  n:"The method avoids integrating over the curve by choosing a different free body."},
+ {e:"Step 2",h:"Isolate a block of the water.",
   l:"Take the quarter of fluid bounded by the shell, the vertical midplane, and the free surface. It is water, it is at rest, so the forces on it sum to zero. Two of its three faces are <strong>flat</strong>.",
   c:"The shell is faded because we are no longer looking at it. The dashed faces are imaginary cuts through the water.",
-  n:"The vertical face is a plane surface. You solved exactly this in Class 03."},
- {e:"Step 3",h:"The flat faces are last week's problem.",
-  l:"On the vertical face, pressure grows linearly with depth and the resultant is <span class='v'>P</span><sub>C</sub><span class='v'>A</span>. The top face sits at the free surface, so its gauge pressure is zero and it contributes nothing. Then add the block's own weight.",
+  n:"The vertical face is a plane surface, treated in Class 03."},
+ {e:"Step 3",h:"The two flat faces.",
+  l:"On the vertical face, pressure grows linearly with depth and the resultant is <span class='v'>P</span><sub>C</sub><span class='v'>A</span>. The top face sits at the free surface, so its gage pressure is zero and it contributes nothing. Then add the block's own weight.",
   c:"F<tspan>x</tspan> on the vertical cut, W at the quarter-disc centroid, 4R/3π from the centre along each axis.",
-  n:"Nothing here is new. A plane surface and a weight."},
- {e:"Step 4",h:"Whatever is left must come from the shell.",
+  n:"A plane-surface force and a weight."},
+ {e:"Step 4",h:"The remaining force comes from the shell.",
   l:"The block is in equilibrium, so the shell's push on it closes the balance exactly. Horizontally it must cancel <span class='v'>F</span><sub>x</sub>; vertically it must carry <span class='v'>W</span>.",
   c:"The two components the shell must supply to hold this block still.",
-  n:"F<sub>H</sub> = F<sub>x</sub> and F<sub>V</sub> = W. That is the whole method."},
- {e:"Step 5",h:"Turn it around, and it passes through the centre.",
+  n:"F<sub>H</sub> = F<sub>x</sub> and F<sub>V</sub> = W. "},
+ {e:"Step 5",h:"The resultant on the shell passes through the centre.",
   l:"By Newton's third law the water pushes back on the shell with the same magnitude, opposite sense. Because every pressure force on a circular arc is radial, the resultant must pass through the centre of the circle.",
   c:"The resultant on the shell, drawn through O. Its line of action needs no integration.",
   n:""}

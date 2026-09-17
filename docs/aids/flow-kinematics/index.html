@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flow kinematics: field, acceleration, and the four lines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+ --bg:#F5F6F4; --surface:#FFFFFF; --surface-2:#EEF0EE; --ink:#15181C; --ink-2:#4E565F;
+ --ink-3:#7C848D; --rule:#D8DCDA; --grid:#E6E9E7;
+ --w:#BD5A0E; --w-soft:#F6E7D9; --fluid:#0092AB; --fluid-soft:#DBEFF3;
+ --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+ --bg:#14171A; --surface:#1C2126; --surface-2:#242A30; --ink:#E9ECEE; --ink-2:#A7B0B8;
+ --ink-3:#78828B; --rule:#2C3339; --grid:#252C32;
+ --w:#D9762E; --w-soft:#38240F; --fluid:#12A2BA; --fluid-soft:#0F2E37;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+ --bg:#14171A; --surface:#1C2126; --surface-2:#242A30; --ink:#E9ECEE; --ink-2:#A7B0B8;
+ --ink-3:#78828B; --rule:#2C3339; --grid:#252C32;
+ --w:#D9762E; --w-soft:#38240F; --fluid:#12A2BA; --fluid-soft:#0F2E37;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.6;
+ -webkit-font-smoothing:antialiased}
+.v{font-family:"Source Serif 4",Georgia,serif;font-style:italic}
+.wrap{max-width:1140px;margin:0 auto;padding:22px 24px 60px}
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:16px}
+.eyebrow{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+ font-weight:600;margin:0 0 2px}
+h1{font-family:Archivo,sans-serif;font-size:25px;font-weight:700;letter-spacing:-.02em;margin:0}
+.tbtn{font:inherit;font-size:12px;background:var(--surface);color:var(--ink-2);
+ border:1px solid var(--rule);border-radius:7px;padding:6px 11px;cursor:pointer}
+.tbtn:hover{color:var(--ink)}
+.rail{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:12px;margin-bottom:18px}
+.item{font:inherit;font-size:12.5px;background:none;border:1px solid transparent;border-radius:7px;
+ padding:6px 11px;color:var(--ink-3);cursor:pointer;white-space:nowrap}
+.item:hover{color:var(--ink-2);background:var(--surface-2)}
+.item[aria-current="true"]{color:var(--ink);background:var(--surface);border-color:var(--rule);font-weight:600}
+.item b{font-variant-numeric:tabular-nums;color:var(--ink-3);font-weight:600;margin-right:6px}
+.item[aria-current="true"] b{color:var(--fluid)}
+.panel{display:none} .panel.on{display:block}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:20px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:11px;padding:16px 18px;box-shadow:var(--shadow)}
+.card.tight{padding:12px}
+h2{font-family:Archivo,sans-serif;font-size:19px;font-weight:600;letter-spacing:-.01em;margin:0 0 6px}
+h3{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);font-weight:600;margin:0 0 8px}
+p{margin:0 0 11px}
+.lede{color:var(--ink-2);font-size:14.5px;margin:0 0 14px;max-width:70ch}
+.stage{position:relative;width:100%;aspect-ratio:4/3;border-radius:8px;overflow:hidden;background:var(--surface-2)}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.cap{font-size:12px;color:var(--ink-3);margin:8px 2px 0;line-height:1.5}
+.ctl{display:flex;align-items:center;gap:10px;margin:12px 0 0;flex-wrap:wrap}
+.ctl label{font-size:12.5px;color:var(--ink-2);min-width:96px}
+input[type=range]{flex:1;min-width:120px;accent-color:var(--fluid)}
+.val{font-variant-numeric:tabular-nums;font-size:12.5px;color:var(--ink);min-width:74px;text-align:right}
+.btn{font:inherit;font-size:12.5px;background:var(--surface-2);color:var(--ink);border:1px solid var(--rule);
+ border-radius:7px;padding:6px 13px;cursor:pointer}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--fluid);border-color:var(--fluid);color:#fff;font-weight:600}
+.chk{display:flex;align-items:center;gap:9px;padding:7px 9px;border:1px solid var(--rule);border-radius:8px;
+ margin-bottom:7px;cursor:pointer;background:var(--surface)}
+.chk:hover{border-color:var(--ink-3)}
+.chk input{accent-color:var(--fluid);width:15px;height:15px;margin:0}
+.chk .nm{font-size:13px}
+.chk .sw{width:17px;height:3px;border-radius:2px;flex:none}
+table.r{width:100%;border-collapse:collapse;font-size:13.5px}
+table.r td{padding:6px 0;border-bottom:1px solid var(--grid)}
+table.r tr:last-child td{border-bottom:0}
+table.r td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.eqb{border-left:3px solid var(--fluid);padding:3px 0 3px 14px;margin:14px 0}
+.eq{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-size:19px;display:block;line-height:1.7}
+.eq .op{font-style:normal;color:var(--ink-3);padding:0 .2em}
+.eq .num{font-style:normal}
+.trm{border-radius:4px;padding:1px 3px;transition:opacity .18s,background .18s}
+.trm.off{opacity:.24}
+.tT{background:var(--w-soft);color:var(--w)}
+.tC{background:var(--fluid-soft);color:var(--fluid)}
+.note{font-size:13px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--rule);
+ border-radius:8px;padding:11px 13px;margin-top:13px}
+.note b{color:var(--ink)}
+.pnav{display:flex;justify-content:space-between;gap:12px;margin-top:22px;border-top:1px solid var(--rule);padding-top:16px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);margin-top:9px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:16px;height:3px;border-radius:2px;display:block}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head>
+<body>
+<div class="wrap">
+<header>
+ <div><p class="eyebrow">CIVL 2050 &middot; Class 05</p><h1>Flow kinematics</h1></div>
+ <span style="display:flex;gap:8px"><button class="tbtn" id="halfb" type="button">Show full field</button><button class="tbtn" id="theme" type="button">Theme</button></span>
+</header>
+
+<nav class="rail" id="rail" aria-label="Steps"></nav>
+
+<!-- ============ 1 ============ -->
+<section class="panel" data-p="0">
+ <p class="lede">One flow, used for the whole lecture: the street-sign field from the problem set,
+  <span class="v">V</span> = (<span class="v">V</span><sub>0</sub>/<span class="v">&#8467;</span>)(&minus;<span class="v">x</span> <b class="v">i</b> + <span class="v">y</span> <b class="v">j</b>).
+  Flow arrives along <span class="v">x</span>, stagnates on the face of the sign at <span class="v">x</span> = 0, and runs up and down it along <span class="v">y</span>.</p>
+ <div class="grid">
+  <div>
+   <div class="card tight"><div class="stage"><canvas id="c1"></canvas></div></div>
+   <p class="cap">Shading is the pressure field, darkest at the highest pressure. Arrows are the velocity vectors. Move the pointer to probe any point. The hatched block is the sign, lying in the <span class="v">y</span>&ndash;<span class="v">z</span> plane; the fluid is the half in front of it. <b>Show full field</b> gives the four-quadrant picture used in the lecture notes, in which the other half is the mirror flow behind the sign.</p>
+  </div>
+  <div>
+   <div class="card">
+    <h3>At the probe</h3>
+    <table class="r">
+     <tr><td>Position <span class="v">x</span>, <span class="v">y</span></td><td id="r1p">&mdash;</td></tr>
+     <tr><td><span class="v">v</span><sub>x</sub> = &minus;<span class="v">kx</span></td><td id="r1u">&mdash;</td></tr>
+     <tr><td><span class="v">v</span><sub>y</sub> = <span class="v">ky</span></td><td id="r1v">&mdash;</td></tr>
+     <tr><td>Magnitude |<span class="v">V</span>|</td><td id="r1m">&mdash;</td></tr>
+     <tr><td><span class="v">p</span> relative to stagnation</td><td id="r1q">&mdash;</td></tr>
+    </table>
+   </div>
+   <div class="card" style="margin-top:14px">
+    <h3>The field</h3>
+    <p style="font-size:13.5px;margin:0 0 9px">Every point in the region has a velocity vector and a pressure. The assignment of those values to points is the field. No particle is being followed on this panel.</p>
+    <p style="font-size:13.5px;margin:0">At the origin both velocity components vanish, so <span class="v">V</span> = 0. This is the stagnation point. It is also the point of highest pressure.</p>
+   </div>
+   <div class="note"><b>Constants.</b> <span class="v">V</span><sub>0</sub> = 1 m/s, <span class="v">&#8467;</span> = 1 m, so <span class="v">k</span> = <span class="v">V</span><sub>0</sub>/<span class="v">&#8467;</span> = 1 s<sup>&minus;1</sup>. Air at <span class="v">&#961;</span> = 1.2 kg/m<sup>3</sup>. Pressure from <span class="v">p</span> = <span class="v">p</span><sub>0</sub> &minus; &frac12;<span class="v">&#961;k</span><sup>2</sup><span class="v">r</span><sup>2</sup>, exact for this field.</div>
+  </div>
+ </div>
+ <div class="pnav"><span></span><button class="btn primary" data-go="1" type="button">Now follow a particle &rarr;</button></div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="panel" data-p="1">
+ <p class="lede">This flow is steady, so &part;<span class="v">V</span>/&part;<span class="v">t</span> = 0 at every point. Particles still accelerate.</p>
+ <div class="grid">
+  <div>
+   <div class="card tight"><div class="stage"><canvas id="c2"></canvas></div></div>
+   <div class="ctl">
+    <button class="btn primary" id="b2play" type="button">Pause</button>
+    <button class="btn" id="b2res" type="button">Release again</button>
+    <label style="min-width:0">Seed height</label>
+    <input type="range" id="s2" min="4" max="80" value="18">
+    <span class="val" id="v2">&mdash;</span>
+   </div>
+   <p class="cap">The particle is released near the incoming axis and followed. Teal is its velocity, dark is its acceleration. The two are not parallel.</p>
+  </div>
+  <div>
+   <div class="card">
+    <h3>At the particle</h3>
+    <table class="r">
+     <tr><td>Speed |<span class="v">V</span>|</td><td id="r2m">&mdash;</td></tr>
+     <tr><td>&part;<span class="v">V</span>/&part;<span class="v">t</span> at its location</td><td id="r2t">0.000 m/s&sup2;</td></tr>
+     <tr><td>Convective (<span class="v">V</span>&middot;&nabla;)<span class="v">V</span></td><td id="r2c">&mdash;</td></tr>
+     <tr><td>Total |<span class="v">a</span>|</td><td id="r2a">&mdash;</td></tr>
+    </table>
+   </div>
+   <div class="eqb"><span class="eq"><span class="v">a</span><sub>x</sub> <span class="op">=</span>
+     <span class="trm tT">&part;<span class="v">v</span><sub>x</sub>/&part;<span class="v">t</span></span>
+     <span class="op">+</span>
+     <span class="trm tC"><span class="v">v</span><sub>x</sub>&part;<span class="v">v</span><sub>x</sub>/&part;<span class="v">x</span> <span class="op">+</span> <span class="v">v</span><sub>y</sub>&part;<span class="v">v</span><sub>x</sub>/&part;<span class="v">y</span></span></span></div>
+   <div class="card" style="margin-top:4px">
+    <p style="font-size:13.5px;margin:0 0 9px">The amber term is zero at every point and every instant in this flow. The particle still accelerates. It slows as it approaches the stagnation region, turns, and speeds up again on the way out. All of that comes from the teal term.</p>
+    <p style="font-size:13.5px;margin:0">Steady means that nothing changes at a fixed point. It does not mean that nothing accelerates. The material derivative has two terms for this reason.</p>
+   </div>
+   <div class="note">For this field the convective term equals <span class="v">k</span><sup>2</sup> times the offset from the stagnation point, so it points directly away from it at every location.</div>
+  </div>
+ </div>
+ <div class="pnav"><button class="btn" data-go="0" type="button">&larr; Back</button><button class="btn primary" data-go="2" type="button">Make it unsteady &rarr;</button></div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="panel" data-p="2">
+ <p class="lede">Let the oncoming wind veer up and down, so the stagnation point slides along the face of the sign:
+  <span class="v">v</span><sub>y</sub> = <span class="v">k</span>(<span class="v">y</span> &minus; <span class="v">y</span><sub>s</sub>), <span class="v">y</span><sub>s</sub> = <span class="v">A</span> sin <span class="v">&#969;t</span>. The sign does not move. The temporal term is now non-zero.</p>
+ <div class="grid">
+  <div>
+   <div class="card tight"><div class="stage"><canvas id="c3"></canvas></div></div>
+   <div class="ctl">
+    <button class="btn primary" id="b3play" type="button">Pause</button>
+    <label>Gust amplitude <span class="v">A</span></label>
+    <input type="range" id="s3" min="0" max="100" value="0">
+    <span class="val" id="v3">0.00 m</span>
+   </div>
+   <p class="cap">Drag the probe. Grey is the velocity, the same quantity the background arrows show. Amber and teal are the two parts of the acceleration and the black arrow is their sum. Grey and black are different quantities and do not generally align.</p>
+  </div>
+  <div>
+   <div class="card">
+    <h3>Show the terms</h3>
+    <label class="chk"><input type="checkbox" id="k3t" checked><span class="sw" style="background:var(--w)"></span><span class="nm">Temporal &part;<span class="v">V</span>/&part;<span class="v">t</span></span></label>
+    <label class="chk"><input type="checkbox" id="k3c" checked><span class="sw" style="background:var(--fluid)"></span><span class="nm">Convective (<span class="v">V</span>&middot;&nabla;)<span class="v">V</span></span></label>
+    <label class="chk"><input type="checkbox" id="k3s" checked><span class="sw" style="background:var(--grid)"></span><span class="nm">Streamlines</span></label>
+   </div>
+   <div class="card" style="margin-top:14px">
+    <h3>At the probe</h3>
+    <table class="r">
+     <tr><td>Velocity <span class="v">V</span></td><td id="r3v">&mdash;</td></tr>
+     <tr><td>&part;<span class="v">V</span>/&part;<span class="v">t</span></td><td id="r3t">&mdash;</td></tr>
+     <tr><td>Stagnation point <span class="v">y</span><sub>s</sub></td><td id="r3s">&mdash;</td></tr>
+     <tr><td>(<span class="v">V</span>&middot;&nabla;)<span class="v">V</span></td><td id="r3c">&mdash;</td></tr>
+     <tr><td>Total <span class="v">a</span></td><td id="r3a">&mdash;</td></tr>
+    </table>
+   </div>
+   <div class="note" style="margin-bottom:13px">The background arrows and the grey arrow are velocity. The black arrow is acceleration. Near the sign the fluid decelerates, so the acceleration has a component opposing the motion and a component across it, because the particle is also turning. The two align only where a particle accelerates along a straight path.</div>
+   <div class="note" id="n3">With the amplitude above zero the stagnation point moves up and down the face, so the streamline pattern is no longer fixed in space. The amber arrow points purely along <span class="v">y</span>, because only <span class="v">v</span><sub>y</sub> carries the time dependence. <span class="v">a</span><sub>x</sub> remains purely convective at every amplitude.</div>
+  </div>
+ </div>
+ <div class="pnav"><button class="btn" data-go="1" type="button">&larr; Back</button><button class="btn primary" data-go="3" type="button">The four lines &rarr;</button></div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="panel" data-p="3">
+ <p class="lede">Four curves defined on the same flow. At zero gust amplitude three of them coincide. Above zero they separate.</p>
+ <div class="grid">
+  <div>
+   <div class="card tight"><div class="stage"><canvas id="c4"></canvas></div></div>
+   <div class="ctl">
+    <button class="btn primary" id="b4play" type="button">Pause</button>
+    <button class="btn" id="b4res" type="button">Reseed</button>
+    <label>Gust amplitude <span class="v">A</span></label>
+    <input type="range" id="s4" min="0" max="100" value="0">
+    <span class="val" id="v4">0.00 m</span>
+   </div>
+   <div class="legend">
+    <span><i style="background:var(--fluid)"></i>streamline</span>
+    <span><i style="background:var(--w)"></i>pathline</span>
+    <span><i style="background:var(--w);opacity:.55"></i>streakline</span>
+    <span><i style="background:var(--ink-2)"></i>timeline</span>
+   </div>
+  </div>
+  <div>
+   <div class="card">
+    <h3>Draw</h3>
+    <label class="chk"><input type="checkbox" id="k4s" checked><span class="sw" style="background:var(--fluid)"></span><span class="nm">Streamline &mdash; tangent to <span class="v">V</span> right now</span></label>
+    <label class="chk"><input type="checkbox" id="k4p" checked><span class="sw" style="background:var(--w)"></span><span class="nm">Pathline &mdash; where one particle has been</span></label>
+    <label class="chk"><input type="checkbox" id="k4k" checked><span class="sw" style="background:var(--w);opacity:.55"></span><span class="nm">Streakline &mdash; all particles from one source</span></label>
+    <label class="chk"><input type="checkbox" id="k4t"><span class="sw" style="background:var(--ink-2)"></span><span class="nm">Timeline &mdash; a tagged row of particles</span></label>
+   </div>
+   <div class="card" style="margin-top:14px">
+    <p style="font-size:13.5px;margin:0 0 9px"><b>Steady flow.</b> A particle released at the source follows the streamline, and every later particle follows the same one, so the three curves coincide. This identity holds only in steady flow.</p>
+    <p style="font-size:13.5px;margin:0"><b>Unsteady flow.</b> The streamline is defined at one instant, the pathline records the history of one particle, and the streakline is the current position of all particles released from the source. The three are different curves.</p>
+   </div>
+   <div class="note">The timeline is a row of particles tagged at one instant, dashed at the tagged positions and solid at the current positions. It rotates toward the face of the sign, stretches, and remains straight. This velocity field is linear in <span class="v">x</span> and <span class="v">y</span>, so it stretches and rotates material lines without bending them. That is linear strain, with no shear and no rotation.</div>
+  </div>
+ </div>
+ <div class="pnav"><button class="btn" data-go="2" type="button">&larr; Back</button><button class="btn primary" data-go="4" type="button">Two ways to measure &rarr;</button></div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="panel" data-p="4">
+ <p class="lede">A fixed sensor and a tagged particle in the same flow, both recording speed. The difference between the two records is the convective term.</p>
+ <div class="grid">
+  <div>
+   <div class="card tight"><div class="stage"><canvas id="c5"></canvas></div></div>
+   <div class="ctl">
+    <button class="btn primary" id="b5play" type="button">Pause</button>
+    <button class="btn" id="b5res" type="button">Release again</button>
+    <label>Gust amplitude <span class="v">A</span></label>
+    <input type="range" id="s5" min="0" max="100" value="0">
+    <span class="val" id="v5">0.00 m</span>
+   </div>
+  </div>
+  <div>
+   <div class="card tight"><div class="stage" style="aspect-ratio:16/7"><canvas id="c5b"></canvas></div></div>
+   <div class="legend" style="margin-left:4px">
+    <span><i style="background:var(--fluid)"></i>fixed probe, Eulerian</span>
+    <span><i style="background:var(--w)"></i>tagged particle, Lagrangian</span>
+   </div>
+   <div class="card" style="margin-top:14px">
+    <p style="font-size:13.5px;margin:0 0 9px">At zero gust amplitude the probe trace is flat, because nothing changes at a fixed point in a steady flow. The particle trace falls and then rises, because the particle is carried into slow fluid near the stagnation point and out into fast fluid again.</p>
+    <p style="font-size:13.5px;margin:0">A neutrally buoyant weather balloon corresponds to the amber trace: it moves with the air and records what a fluid element experiences. A mast-mounted anemometer corresponds to the teal trace.</p>
+   </div>
+   <div class="note">Both records are correct. They measure different quantities, related by <span class="v">D</span>/<span class="v">Dt</span> = &part;/&part;<span class="v">t</span> + <span class="v">V</span>&middot;&nabla;.</div>
+  </div>
+ </div>
+ <div class="pnav"><button class="btn" data-go="3" type="button">&larr; Back</button><span></span></div>
+</section>
+
+</div>
+<script>
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i)};
+
+/* ---------- physics ---------- */
+var K=1.0, OM=1.6, RHO=1.2, P0=0;
+var Amp={p2:0,p3:0,p4:0,p5:0};
+var HALF=true;
+function ys(t,A){return A*Math.sin(OM*t)}
+function ysd(t,A){return A*OM*Math.cos(OM*t)}
+function vel(x,y,t,A){return [-K*x, K*(y-ys(t,A))]}
+function accT(t,A){return [0, -K*ysd(t,A)]}
+function accC(x,y,t,A){return [K*K*x, K*K*(y-ys(t,A))]}
+function acc(x,y,t,A){var a=accT(t,A),b=accC(x,y,t,A);return [a[0]+b[0],a[1]+b[1]]}
+function pres(x,y,t,A){return P0-RHO*(0.5*K*K*x*x+0.5*K*K*(y-ys(t,A))*(y-ys(t,A))-K*ysd(t,A)*y);}
+function Pf(tt,A){return A*K*(K*Math.sin(OM*tt)+OM*Math.cos(OM*tt))/(K*K+OM*OM)}
+function path(x0,y0,t0,t,A){
+  return [x0*Math.exp(-K*(t-t0)), (y0-Pf(t0,A))*Math.exp(K*(t-t0))+Pf(t,A)];
+}
+
+/* ---------- drawing helpers ---------- */
+var DOM={x0:-2.2,x1:2.2,y0:-1.65,y1:1.65};
+function C(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function mkView(cv){
+  var d=window.devicePixelRatio||1, r=cv.getBoundingClientRect();
+  var W=Math.max(1,Math.round(r.width)), H=Math.max(1,Math.round(r.height));
+  if(cv.width!==Math.round(W*d)||cv.height!==Math.round(H*d)){cv.width=Math.round(W*d);cv.height=Math.round(H*d);}
+  var g=cv.getContext("2d"); g.setTransform(d,0,0,d,0,0); g.clearRect(0,0,W,H);
+  var sx=W/(DOM.x1-DOM.x0), sy=H/(DOM.y1-DOM.y0), s=Math.min(sx,sy);
+  var cx=W/2, cy=H/2;
+  return {g:g,W:W,H:H,s:s,
+    X:function(x){return cx+x*s}, Y:function(y){return cy-y*s},
+    ix:function(px){return (px-cx)/s}, iy:function(py){return (cy-py)/s}};
+}
+function arw(g,x0,y0,x1,y1,col,lw,hs){
+  var dx=x1-x0, dy=y1-y0, L=Math.hypot(dx,dy);
+  if(L<1.2) return;
+  hs=hs||Math.min(9,3+lw*2.1);
+  var ux=dx/L, uy=dy/L, bx=x1-ux*hs, by=y1-uy*hs;
+  g.strokeStyle=col; g.lineWidth=lw; g.lineCap="round";
+  g.beginPath(); g.moveTo(x0,y0); g.lineTo(bx,by); g.stroke();
+  g.fillStyle=col; g.beginPath();
+  g.moveTo(x1,y1); g.lineTo(bx-uy*hs*0.42, by+ux*hs*0.42); g.lineTo(bx+uy*hs*0.42, by-ux*hs*0.42);
+  g.closePath(); g.fill();
+}
+function hex(c){c=(c||"").trim();
+  if(c.charAt(0)!=="#"){var m=c.match(/(\d+(?:\.\d+)?)/g);
+    return m?[+m[0],+m[1],+m[2]]:[128,128,128];}
+  c=c.slice(1); if(c.length===3)c=c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+  return [parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)];}
+function mix(a,b,f){var A=hex(a),B=hex(b);
+  return "rgb("+Math.round(A[0]+(B[0]-A[0])*f)+","+Math.round(A[1]+(B[1]-A[1])*f)+","+Math.round(A[2]+(B[2]-A[2])*f)+")";}
+
+function drawPressure(V,t,A){
+  var g=V.g, N=34, M=Math.round(N*V.H/V.W);
+  var lo=1e9, hi=-1e9, vals=[];
+  for(var j=0;j<M;j++){ vals.push([]);
+    for(var i=0;i<N;i++){
+      var x=V.ix((i+0.5)*V.W/N), y=V.iy((j+0.5)*V.H/M);
+      var p=pres(x,y,t,A); vals[j].push(p); if(p<lo)lo=p; if(p>hi)hi=p;
+    }}
+  var c0=C("--surface"), c1=mix(C("--fluid-soft"),C("--fluid"),0.15), span=(hi-lo)||1;
+  for(var j2=0;j2<M;j2++)for(var i2=0;i2<N;i2++){
+    var f=(vals[j2][i2]-lo)/span;
+    g.fillStyle=mix(c0,c1,Math.pow(f,1.0));
+    g.fillRect(i2*V.W/N-0.6, j2*V.H/M-0.6, V.W/N+1.2, V.H/M+1.2);
+  }
+}
+function drawIsobars(V,t,A,lab){
+  var g=V.g, yc=ys(t,A)+ysd(t,A)/K;
+  g.save(); g.strokeStyle=C("--ink-3"); g.globalAlpha=.38; g.lineWidth=1; g.setLineDash([4,5]);
+  [0.45,0.9,1.35,1.8,2.25,2.7].forEach(function(r){
+    g.beginPath(); g.arc(V.X(0),V.Y(yc),r*V.s,0,6.2832); g.stroke();
+  });
+  g.restore();
+  if(lab){ g.font="11px 'IBM Plex Sans',sans-serif"; g.fillStyle=C("--ink-3");
+    g.textAlign="center"; g.textBaseline="middle";
+    g.fillText("isobars", V.X(0)+1.02*V.s, V.Y(yc)-1.08*V.s); }
+}
+function clampX(x,t,A){return HALF?Math.max(x,0.12):x}
+function maskBack(V,t,A){
+  if(!HALF) return;
+  var g=V.g, X=V.X(0);
+  g.fillStyle=C("--bg"); g.fillRect(-2,0,X+2,V.H);
+  g.save(); g.strokeStyle=C("--ink-3"); g.lineWidth=1; g.globalAlpha=.5;
+  for(var d=-V.H;d<V.W;d+=9){ g.beginPath(); g.moveTo(X+Math.max(0,d),Math.max(0,-d));
+    g.lineTo(X+Math.min(V.W-X,d+V.H), Math.min(V.H,V.H-d+ (V.W-X) - (V.W-X))); }
+  g.restore();
+  // hatching
+  g.save(); g.beginPath(); g.rect(0,0,X,V.H); g.clip();
+  g.strokeStyle=C("--rule"); g.lineWidth=1;
+  for(var k2=-V.H;k2<X+V.H;k2+=9){ g.beginPath(); g.moveTo(k2,0); g.lineTo(k2-V.H,V.H); g.stroke(); }
+  g.restore();
+  g.strokeStyle=C("--ink"); g.lineWidth=3;
+  g.beginPath(); g.moveTo(X,0); g.lineTo(X,V.H); g.stroke();
+  g.font="600 11px 'IBM Plex Sans',sans-serif"; g.fillStyle=C("--ink-2");
+  g.textAlign="right"; g.textBaseline="top"; g.fillText("sign", X-9, 8);
+}
+function axisKey(V){
+  var g=V.g, x0=V.W-52, y0=V.H-16, L=26;
+  arw(g,x0,y0,x0+L,y0,C("--ink-3"),1.5,6);
+  arw(g,x0,y0,x0,y0-L,C("--ink-3"),1.5,6);
+  g.font="italic 12px Georgia,serif"; g.fillStyle=C("--ink-3");
+  g.textAlign="left"; g.textBaseline="middle"; g.fillText("x",x0+L+4,y0);
+  g.textAlign="center"; g.textBaseline="bottom"; g.fillText("y",x0,y0-L-3);
+}
+function drawAxes(V){
+  var g=V.g; g.strokeStyle=C("--grid"); g.lineWidth=1;
+  g.beginPath(); g.moveTo(0,V.Y(0)); g.lineTo(V.W,V.Y(0));
+  g.moveTo(V.X(0),0); g.lineTo(V.X(0),V.H); g.stroke();
+}
+function drawArrows(V,t,A,scale){
+  var g=V.g, n=13, m=10, col=C("--ink-3");
+  for(var i=0;i<n;i++)for(var j=0;j<m;j++){
+    var x=DOM.x0+(i+0.5)*(DOM.x1-DOM.x0)/n, y=DOM.y0+(j+0.5)*(DOM.y1-DOM.y0)/m;
+    var v=vel(x,y,t,A), L=Math.hypot(v[0],v[1]);
+    if(L<1e-4) continue;
+    var len=Math.min(31, 3.5+L*(scale||11));
+    var px=V.X(x), py=V.Y(y), ux=v[0]/L, uy=-v[1]/L;
+    arw(g,px-ux*len/2,py-uy*len/2,px+ux*len/2,py+uy*len/2,col,1.5,6);
+  }
+}
+function SLC(){return mix(C("--ink-3"),C("--surface"),0.34)}
+function streamPts(x0,y0,t,A,dir){
+  var pts=[[x0,y0]], x=x0, y=y0, h=0.012*dir;
+  for(var i=0;i<1400;i++){
+    var k1=vel(x,y,t,A), n1=Math.hypot(k1[0],k1[1]); if(n1<1e-7) break;
+    var k1x=k1[0]/n1,k1y=k1[1]/n1;
+    var k2=vel(x+h*k1x/2,y+h*k1y/2,t,A), n2=Math.hypot(k2[0],k2[1]); if(n2<1e-7)break;
+    x+=h*k2[0]/n2; y+=h*k2[1]/n2;
+    if(x<DOM.x0-0.4||x>DOM.x1+0.4||y<DOM.y0-0.4||y>DOM.y1+0.4) break;
+    pts.push([x,y]);
+  }
+  return pts;
+}
+function poly(V,pts,col,lw,dash){
+  if(pts.length<2) return;
+  var g=V.g; g.save(); if(dash)g.setLineDash(dash);
+  g.strokeStyle=col; g.lineWidth=lw; g.lineJoin="round"; g.lineCap="round";
+  g.beginPath(); g.moveTo(V.X(pts[0][0]),V.Y(pts[0][1]));
+  for(var i=1;i<pts.length;i++) g.lineTo(V.X(pts[i][0]),V.Y(pts[i][1]));
+  g.stroke(); g.restore();
+}
+function dot(V,x,y,col,r,ring){
+  var g=V.g; g.fillStyle=col; g.beginPath(); g.arc(V.X(x),V.Y(y),r,0,6.2832); g.fill();
+  if(ring){g.strokeStyle=ring;g.lineWidth=2;g.stroke();}
+}
+function label(V,x,y,txt,col,dx,dy){
+  var g=V.g; g.font="600 12px 'IBM Plex Sans',sans-serif"; g.fillStyle=col;
+  g.textAlign="left"; g.textBaseline="middle"; g.fillText(txt,V.X(x)+(dx||8),V.Y(y)+(dy||0));
+}
+function stagMark(V,t,A){
+  var g=V.g, X=V.X(0), Y=V.Y(ys(t,A));
+  g.strokeStyle=C("--surface"); g.lineWidth=3.6;
+  g.beginPath(); g.arc(X,Y,5.5,0,6.2832); g.stroke();
+  g.strokeStyle=C("--ink"); g.lineWidth=1.9;
+  g.beginPath(); g.arc(X,Y,5.5,0,6.2832); g.stroke();
+  g.beginPath(); g.moveTo(X-9,Y); g.lineTo(X-6,Y); g.moveTo(X+6,Y); g.lineTo(X+9,Y);
+  g.moveTo(X,Y-9); g.lineTo(X,Y-6); g.moveTo(X,Y+6); g.lineTo(X,Y+9); g.stroke();
+}
+function fmt(n,d){return (n<0?"−":"")+Math.abs(n).toFixed(d===undefined?2:d)}
+function vec2(a,d){return fmt(a[0],d)+", "+fmt(a[1],d)}
+
+/* ---------- panel 1 ---------- */
+var pr1={x:1.1,y:0.75};
+function draw1(){
+  var cv=$("c1"); if(!cv.offsetWidth) return;
+  var V=mkView(cv), t=0, A=0;
+  drawPressure(V,t,A); drawIsobars(V,t,A,true); drawAxes(V);
+  var g=V.g;
+  drawArrows(V,t,A,13);
+  stagMark(V,t,A);
+  label(V,0,ys(t,A),"stagnation",C("--ink"),14,-14);
+  maskBack(V,t,A); axisKey(V);
+  pr1.x=clampX(pr1.x,t,A);
+  var v=vel(pr1.x,pr1.y,t,A), L=Math.hypot(v[0],v[1]);
+  g.strokeStyle=C("--ink-3"); g.lineWidth=1; g.setLineDash([3,3]);
+  g.beginPath(); g.moveTo(0,V.Y(pr1.y)); g.lineTo(V.W,V.Y(pr1.y));
+  g.moveTo(V.X(pr1.x),0); g.lineTo(V.X(pr1.x),V.H); g.stroke(); g.setLineDash([]);
+  if(L>1e-6) arw(g,V.X(pr1.x),V.Y(pr1.y),V.X(pr1.x)+v[0]/L*Math.min(62,16+L*30),
+                 V.Y(pr1.y)-v[1]/L*Math.min(62,16+L*30),C("--fluid"),3.2);
+  dot(V,pr1.x,pr1.y,C("--surface"),4.5,C("--ink"));
+  $("r1p").textContent=fmt(pr1.x)+", "+fmt(pr1.y)+" m";
+  $("r1u").textContent=fmt(v[0],3)+" m/s";
+  $("r1v").textContent=fmt(v[1],3)+" m/s";
+  $("r1m").textContent=fmt(L,3)+" m/s";
+  $("r1q").textContent=fmt(pres(pr1.x,pr1.y,t,A),3)+" Pa";
+}
+
+/* ---------- panel 2 ---------- */
+var p2={t:0,play:true,x:0,y:0,x0:2.0,y0:0.18,t0:0,trail:[]};
+function reset2(){p2.t0=p2.t;p2.trail=[];}
+function draw2(){
+  var cv=$("c2"); if(!cv.offsetWidth) return;
+  var V=mkView(cv), t=p2.t, A=0;
+  drawPressure(V,t,A); drawAxes(V);
+  var g=V.g;
+  var pp=path(p2.x0,p2.y0,p2.t0,t,A);
+  if(Math.abs(pp[1])>DOM.y1+0.3){reset2();pp=path(p2.x0,p2.y0,p2.t0,t,A);}
+  p2.x=pp[0];p2.y=pp[1];
+  drawArrows(V,t,A,11);
+  stagMark(V,t,A);
+  var tr=[]; for(var s=p2.t0;s<=t;s+=0.03) tr.push(path(p2.x0,p2.y0,p2.t0,s,A));
+  poly(V,tr,C("--w"),2.2);
+  maskBack(V,t,A); axisKey(V);
+  var v=vel(p2.x,p2.y,t,A), a=acc(p2.x,p2.y,t,A);
+  var Lv=Math.hypot(v[0],v[1]), La=Math.hypot(a[0],a[1]);
+  var PX=V.X(p2.x), PY=V.Y(p2.y);
+  if(La>1e-6) arw(g,PX,PY,PX+a[0]/La*Math.min(70,14+La*17),PY-a[1]/La*Math.min(70,14+La*17),C("--ink"),3.4);
+  if(Lv>1e-6) arw(g,PX,PY,PX+v[0]/Lv*Math.min(58,14+Lv*24),PY-v[1]/Lv*Math.min(58,14+Lv*24),C("--fluid"),3.0);
+  dot(V,p2.x,p2.y,C("--w"),5.2,C("--surface"));
+  label(V,p2.x,p2.y,"V",C("--fluid"),13,-17);
+  label(V,p2.x,p2.y,"a",C("--ink"),-19,15);
+  $("r2m").textContent=fmt(Lv,3)+" m/s";
+  $("r2c").textContent=fmt(Math.hypot(K*K*p2.x,K*K*p2.y),3)+" m/s²";
+  $("r2a").textContent=fmt(La,3)+" m/s²";
+  $("v2").textContent=fmt(p2.y0,2)+" m";
+}
+
+/* ---------- panel 3 ---------- */
+var p3={t:0,play:true,x:1.0,y:0.7};
+function draw3(){
+  var cv=$("c3"); if(!cv.offsetWidth) return;
+  var V=mkView(cv), t=p3.t, A=Amp.p3, g;
+  drawPressure(V,t,A); drawAxes(V); g=V.g;
+  if($("k3s").checked){
+    [0.28,0.7,1.25,2.0].forEach(function(c){
+      [[1,1],[-1,1],[1,-1],[-1,-1]].forEach(function(s){
+        var sx0=s[0]*Math.sqrt(c), sy0=ys(t,A)+s[1]*Math.sqrt(c);
+        poly(V,streamPts(sx0,sy0,t,A,1),SLC(),1.4);
+        poly(V,streamPts(sx0,sy0,t,A,-1),SLC(),1.4);
+      });
+    });
+  }
+  drawArrows(V,t,A,11); stagMark(V,t,A);
+  maskBack(V,t,A); axisKey(V);
+  p3.x=clampX(p3.x,t,A);
+  var aT=accT(t,A), aC=accC(p3.x,p3.y,t,A), aS=[aT[0]+aC[0],aT[1]+aC[1]];
+  var PX=V.X(p3.x), PY=V.Y(p3.y), SC=44, cap=96;
+  function put(a,col,lw){var L=Math.hypot(a[0],a[1]); if(L<1e-6)return;
+    var len=Math.min(cap,L*SC); arw(g,PX,PY,PX+a[0]/L*len,PY-a[1]/L*len,col,lw);}
+  var vv=vel(p3.x,p3.y,t,A), Lv=Math.hypot(vv[0],vv[1]);
+  function tag(tx,ty,txt,col){g.font="700 13px 'IBM Plex Sans',sans-serif";g.fillStyle=col;
+    g.textAlign="center";g.textBaseline="middle";
+    g.strokeStyle=C("--surface");g.lineWidth=3.4;g.strokeText(txt,tx,ty);g.fillText(txt,tx,ty);}
+  if(Lv>1e-6){var lv=Math.min(86,16+Lv*26), ex=PX+vv[0]/Lv*lv, ey=PY-vv[1]/Lv*lv;
+    arw(g,PX,PY,ex,ey,C("--ink-3"),3.0);
+    tag(ex+(vv[0]<0?-11:11), ey-11, "V", C("--ink-3"));}
+  var Ls=Math.hypot(aS[0],aS[1]);
+  if(Ls>1e-6){var l=Math.min(cap,Ls*SC);
+    g.save(); g.setLineDash([5,4]); g.strokeStyle=C("--ink-3"); g.lineWidth=1.2;
+    g.beginPath(); g.moveTo(PX,PY); g.lineTo(PX+aS[0]/Ls*l,PY-aS[1]/Ls*l); g.stroke(); g.restore();}
+  put(aS,C("--ink"),3.4);
+  if($("k3c").checked) put(aC,C("--fluid"),2.8);
+  if($("k3t").checked) put(aT,C("--w"),2.8);
+  dot(V,p3.x,p3.y,C("--surface"),5,C("--ink"));
+  if(Ls>1e-6){var la=Math.min(cap,Ls*SC);
+    tag(PX+aS[0]/Ls*la+(aS[0]<0?-11:11), PY-aS[1]/Ls*la-11, "a", C("--ink"));}
+  $("r3v").textContent=vec2(vv,3)+" m/s";
+  $("r3t").textContent=vec2(aT,3)+" m/s²";
+  $("r3c").textContent=vec2(aC,3)+" m/s²";
+  $("r3a").textContent=vec2(aS,3)+" m/s²";
+  $("r3s").textContent=fmt(ys(t,A),3)+" m";
+}
+
+/* ---------- panel 4 ---------- */
+var p4={t:0,play:true,t0:0,sx:1.75,sy:0.11,tlT:0};
+function reset4(){p4.t0=p4.t;p4.tlT=p4.t;}
+function draw4(){
+  var cv=$("c4"); if(!cv.offsetWidth) return;
+  var V=mkView(cv), t=p4.t, A=Amp.p4;
+  drawPressure(V,t,A); drawAxes(V);
+  drawArrows(V,t,A,9); maskBack(V,t,A); stagMark(V,t,A); axisKey(V);
+  if($("k4s").checked){
+    poly(V,streamPts(p4.sx,p4.sy,t,A,1),C("--fluid"),2.6);
+    poly(V,streamPts(p4.sx,p4.sy,t,A,-1),C("--fluid"),2.6);
+  }
+  var q=path(p4.sx,p4.sy,p4.t0,t,A);
+  if(Math.abs(q[1])>DOM.y1+0.25){p4.t0=t;q=path(p4.sx,p4.sy,p4.t0,t,A);}
+  if($("k4p").checked){
+    var pl=[]; for(var s=p4.t0;s<=t;s+=0.025) pl.push(path(p4.sx,p4.sy,p4.t0,s,A));
+    poly(V,pl,C("--w"),2.8);
+    dot(V,q[0],q[1],C("--w"),5,C("--surface"));
+  }
+  if($("k4k").checked){
+    var sk=[]; var span=Math.min(t-p4.t0,3.2);
+    for(var i=0;i<=110;i++){var tau=t-span*i/110; if(tau<p4.t0)break; sk.push(path(p4.sx,p4.sy,tau,t,A));}
+    poly(V,sk,mix(C("--w"),C("--surface"),0.35),2.6,[7,5]);
+  }
+  if($("k4t").checked){
+    var t0=p4.tlT, N=22, seed=[], now=[], j, f, sx, sy;
+    for(j=0;j<=N;j++){ f=j/N;
+      sx=0.30+1.58*f; sy=ys(t0,A)-0.95+1.90*f;
+      seed.push([sx,sy]); now.push(path(sx,sy,t0,t,A));
+    }
+    poly(V,seed,mix(C("--ink-3"),C("--surface"),0.45),1.6,[5,5]);
+    var sm=seed[Math.round(N*0.18)];
+    if(t-t0>0.25) label(V,sm[0],sm[1],"as tagged",mix(C("--ink-3"),C("--surface"),0.2),9,13);
+    poly(V,now,C("--ink-2"),2.2);
+    for(j=0;j<=N;j++){ if(Math.abs(now[j][1])<DOM.y1+0.1&&now[j][0]<DOM.x1)
+      dot(V,now[j][0],now[j][1],C("--ink-2"),2.5); }
+    var nm=now[Math.round(N*0.5)];
+    if(t-t0>0.25&&Math.abs(nm[1])<DOM.y1-0.1) label(V,nm[0],nm[1],"now",C("--ink-2"),10,-11);
+    if(t-t0>1.7) p4.tlT=t;
+  }
+  dot(V,p4.sx,p4.sy,C("--ink"),3.4);
+  label(V,p4.sx,p4.sy,"source",C("--ink-2"),-46,-11);
+  $("v4").textContent=fmt(A,2)+" m";
+}
+
+/* ---------- panel 5 ---------- */
+var p5={t:0,play:true,t0:0,px:0.95,py:0.55,x0:1.9,y0:0.14,hE:[],hL:[]};
+function reset5(){p5.t0=p5.t;p5.hE=[];p5.hL=[];}
+function draw5(){
+  var cv=$("c5"); if(!cv.offsetWidth) return;
+  var V=mkView(cv), t=p5.t, A=Amp.p5, g=V.g;
+  drawPressure(V,t,A); drawAxes(V); drawArrows(V,t,A,10); maskBack(V,t,A); stagMark(V,t,A); axisKey(V);
+  p5.px=clampX(p5.px,t,A);
+  var q=path(p5.x0,p5.y0,p5.t0,t,A);
+  if(Math.abs(q[1])>DOM.y1+0.25){reset5();q=path(p5.x0,p5.y0,p5.t0,t,A);}
+  var pl=[]; for(var s=p5.t0;s<=t;s+=0.03) pl.push(path(p5.x0,p5.y0,p5.t0,s,A));
+  poly(V,pl,C("--w"),2.2);
+  var vL=vel(q[0],q[1],t,A), vE=vel(p5.px,p5.py,t,A);
+  var LE=Math.hypot(vE[0],vE[1]), LL=Math.hypot(vL[0],vL[1]);
+  if(LE>1e-6) arw(g,V.X(p5.px),V.Y(p5.py),V.X(p5.px)+vE[0]/LE*Math.min(56,14+LE*26),
+                  V.Y(p5.py)-vE[1]/LE*Math.min(56,14+LE*26),C("--fluid"),3);
+  if(LL>1e-6) arw(g,V.X(q[0]),V.Y(q[1]),V.X(q[0])+vL[0]/LL*Math.min(56,14+LL*26),
+                  V.Y(q[1])-vL[1]/LL*Math.min(56,14+LL*26),C("--w"),3);
+  g.save(); g.strokeStyle=C("--fluid"); g.lineWidth=1.4; g.setLineDash([4,3]);
+  g.beginPath(); g.moveTo(V.X(p5.px),V.Y(p5.py)+9); g.lineTo(V.X(p5.px),V.H); g.stroke(); g.restore();
+  dot(V,p5.px,p5.py,C("--fluid"),5,C("--surface"));
+  label(V,p5.px,p5.py,"probe",C("--fluid"),10,-13);
+  dot(V,q[0],q[1],C("--w"),5,C("--surface"));
+  label(V,q[0],q[1],"particle",C("--w"),11,16);
+  p5.hE.push(LE); p5.hL.push(LL);
+  if(p5.hE.length>320){p5.hE.shift();p5.hL.shift();}
+  trace();
+}
+function trace(){
+  var cv=$("c5b"); if(!cv.offsetWidth) return;
+  var d=window.devicePixelRatio||1, r=cv.getBoundingClientRect();
+  var W=Math.round(r.width), H=Math.round(r.height);
+  if(cv.width!==Math.round(W*d)){cv.width=Math.round(W*d);cv.height=Math.round(H*d);}
+  var g=cv.getContext("2d"); g.setTransform(d,0,0,d,0,0);
+  g.fillStyle=C("--surface"); g.fillRect(0,0,W,H);
+  var pad=26, hi=0.1, i;
+  for(i=0;i<p5.hL.length;i++){hi=Math.max(hi,p5.hL[i],p5.hE[i]);}
+  hi*=1.12;
+  g.strokeStyle=C("--grid"); g.lineWidth=1;
+  g.beginPath(); g.moveTo(pad,H-pad); g.lineTo(W-8,H-pad); g.moveTo(pad,8); g.lineTo(pad,H-pad); g.stroke();
+  g.font="11px 'IBM Plex Sans',sans-serif"; g.fillStyle=C("--ink-3");
+  g.textAlign="right"; g.textBaseline="middle";
+  g.fillText(hi.toFixed(1),pad-5,10); g.fillText("0",pad-5,H-pad);
+  g.textAlign="left"; g.fillText("time →",pad+4,H-pad+12);
+  g.save(); g.translate(11,(H-pad)/2+4); g.rotate(-Math.PI/2);
+  g.textAlign="center"; g.fillText("speed  m/s",0,0); g.restore();
+  function ln(arr,col){
+    if(arr.length<2)return;
+    g.strokeStyle=col; g.lineWidth=2.2; g.lineJoin="round"; g.beginPath();
+    for(var i=0;i<arr.length;i++){
+      var X=pad+(W-8-pad)*i/319, Y=(H-pad)-(H-pad-10)*(arr[i]/hi);
+      i?g.lineTo(X,Y):g.moveTo(X,Y);
+    } g.stroke();
+  }
+  ln(p5.hE,C("--fluid")); ln(p5.hL,C("--w"));
+}
+
+/* ---------- shell ---------- */
+var STEPS=["The field","Following a particle","Unsteady","Streamline, path, streak","Eulerian vs Lagrangian"];
+var step=0, panels=[].slice.call(document.querySelectorAll(".panel"));
+var rail=$("rail");
+STEPS.forEach(function(s,i){
+  var b=document.createElement("button"); b.className="item"; b.type="button";
+  b.innerHTML="<b>0"+(i+1)+"</b>"+s;
+  b.addEventListener("click",function(){go(i)}); rail.appendChild(b);
+});
+function go(i){
+  step=Math.max(0,Math.min(STEPS.length-1,i));
+  panels.forEach(function(p,j){p.classList.toggle("on",j===step)});
+  [].forEach.call(rail.children,function(b,j){b.setAttribute("aria-current",j===step?"true":"false")});
+  requestAnimationFrame(render);
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-go]"); if(b) go(+b.getAttribute("data-go"));
+});
+document.addEventListener("keydown",function(e){
+  if(e.target.tagName==="INPUT")return;
+  if(e.key==="ArrowRight")go(step+1); if(e.key==="ArrowLeft")go(step-1);
+});
+$("halfb").addEventListener("click",function(){
+  HALF=!HALF; this.textContent=HALF?"Show full field":"Show the sign";
+  requestAnimationFrame(render);
+});
+$("theme").addEventListener("click",function(){
+  var r=document.documentElement, cur=r.getAttribute("data-theme");
+  var dark=window.matchMedia("(prefers-color-scheme:dark)").matches;
+  var now=cur?cur:(dark?"dark":"light");
+  r.setAttribute("data-theme", now==="dark"?"light":"dark");
+  requestAnimationFrame(render);
+});
+
+/* probes */
+function probe(cv,obj,after){
+  function mv(e){
+    var r=cv.getBoundingClientRect();
+    var pt=e.touches?e.touches[0]:e;
+    var d=1, W=r.width,H=r.height, s=Math.min(W/(DOM.x1-DOM.x0),H/(DOM.y1-DOM.y0));
+    obj.x=Math.max(DOM.x0+0.05,Math.min(DOM.x1-0.05,(pt.clientX-r.left-W/2)/s));
+    obj.y=Math.max(DOM.y0+0.05,Math.min(DOM.y1-0.05,(H/2-(pt.clientY-r.top))/s));
+    if(after)after();
+    requestAnimationFrame(render);
+  }
+  cv.addEventListener("mousemove",mv);
+  cv.addEventListener("touchmove",function(e){e.preventDefault();mv(e)},{passive:false});
+}
+probe($("c1"),pr1); probe($("c3"),p3); probe($("c5"),p5? {set x(v){p5.px=v},get x(){return p5.px},
+  set y(v){p5.py=v},get y(){return p5.py}}:null);
+
+function bindPlay(id,obj){ $(id).addEventListener("click",function(){
+  obj.play=!obj.play; this.textContent=obj.play?"Pause":"Play"; }); }
+bindPlay("b2play",p2); bindPlay("b3play",p3); bindPlay("b4play",p4); bindPlay("b5play",p5);
+$("b2res").addEventListener("click",reset2);
+$("b4res").addEventListener("click",reset4);
+$("b5res").addEventListener("click",reset5);
+$("s2").addEventListener("input",function(){p2.y0=+this.value/100;reset2()});
+function bindAmp(id,valId,key){ $(id).addEventListener("input",function(){
+  Amp[key]=+this.value/100; $(valId).textContent=fmt(Amp[key],2)+" m"; requestAnimationFrame(render); }); }
+bindAmp("s3","v3","p3"); bindAmp("s4","v4","p4"); bindAmp("s5","v5","p5");
+["k3t","k3c","k3s","k4s","k4p","k4k","k4t"].forEach(function(i){
+  $(i).addEventListener("change",function(){requestAnimationFrame(render)})});
+
+var last=0;
+function render(){
+  if(step===0) draw1();
+  else if(step===1) draw2();
+  else if(step===2) draw3();
+  else if(step===3) draw4();
+  else draw5();
+}
+function loop(ts){
+  var dt=last?Math.min(0.05,(ts-last)/1000):0; last=ts;
+  if(step===1&&p2.play)p2.t+=dt;
+  if(step===2&&p3.play)p3.t+=dt;
+  if(step===3&&p4.play)p4.t+=dt;
+  if(step===4&&p5.play)p5.t+=dt;
+  render(); requestAnimationFrame(loop);
+}
+window.addEventListener("resize",function(){requestAnimationFrame(render)});
+go(0); requestAnimationFrame(loop);
+})();
+</script>
+</body></html>

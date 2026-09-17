@@ -117,7 +117,7 @@ table.props td small{color:var(--ink-3);font-weight:400;font-size:12px}
 <main class="wrap">
   <p class="eyebrow">Centre of pressure</p>
   <h2>The force does not act at the centroid.</h2>
-  <p class="lede">Pressure grows with depth, so the lower half of a plate is pushed harder than the upper half. The resultant therefore acts <strong>below</strong> the centroid &mdash; at the centre of pressure. How far below is the whole question.</p>
+  <p class="lede">Pressure grows with depth, so the lower half of a plate is pushed harder than the upper half. The resultant therefore acts <strong>below</strong> the centroid &mdash; at the centre of pressure. The distance below the centroid is what has to be determined.</p>
 
   <div class="grid">
     <div>
@@ -175,10 +175,10 @@ table.props td small{color:var(--ink-3);font-weight:400;font-size:12px}
           <tr><td>Second moment <span class="v">I</span><sub>xx,C</sub></td><td id="pI">&mdash;</td></tr>
           <tr><td>Radius of gyration&sup2; <span class="v">k</span>&sup2; = <span class="v">I</span>/<span class="v">A</span></td><td id="pK">&mdash;</td></tr>
         </table>
-        <p class="note" style="margin-top:14px"><b><span class="v">k</span>&sup2;</b> is the only thing about the shape that the answer depends on. Two plates of equal area and different <span class="v">k</span>&sup2; give the same force in different places.</p>
+        <p class="note" style="margin-top:14px"><b><span class="v">k</span>&sup2;</b> is the only shape property the answer depends on. Two plates of equal area and different <span class="v">k</span>&sup2; give the same force in different places.</p>
         <h3 style="margin-top:20px">What <span class="v">k</span>&sup2; actually is</h3>
         <svg id="k2Svg" viewBox="0 0 300 128" role="img" aria-label="How the plate's area is spread along the slope, with the root mean square distance k marked either side of the centroid."></svg>
-        <p class="note" style="margin-top:12px"><span class="v">k</span>&sup2; = <span class="v">I</span>/<span class="v">A</span> is the <b>mean square distance</b> of the area from the centroid: average every strip's distance squared, weighted by how much area sits there. It is a variance. So the offset <span class="v">k</span>&sup2;/<span class="v">y</span><sub>C</sub>* reads as <b>variance of depth over mean depth</b>, and both limits follow without algebra. Spread the area further from its own centre and the offset grows; push the plate deeper and the mean swamps the variance, so CP collapses onto C.</p>
+        <p class="note" style="margin-top:12px"><span class="v">k</span>&sup2; = <span class="v">I</span>/<span class="v">A</span> is the <b>mean square distance</b> of the area from the centroid: average every strip's distance squared, weighted by how much area sits there. It is a variance. So the offset <span class="v">k</span>&sup2;/<span class="v">y</span><sub>C</sub>* reads as <b>variance of depth over mean depth</b>, and both limiting cases follow from that reading. Spreading the area further from its centroid increases the offset. Increasing the depth increases the mean relative to the variance, so CP approaches C.</p>
       </div>
 
       <div class="card">
@@ -270,7 +270,7 @@ function drawScene(c){
   var o='';
   o+='<rect x="0" y="'+SURF+'" width="'+W+'" height="'+(H-SURF)+'" fill="var(--fluid-soft)" opacity=".5"/>';
   o+=ln(0,SURF,W,SURF,"var(--fluid)",2);
-  o+=txt(12,SURF-10,"axlab","free surface &nbsp;&middot;&nbsp; "+(c.P0?"P<tspan baseline-shift=\"sub\" font-size=\"9\">atm</tspan> acting":"gauge pressure"));
+  o+=txt(12,SURF-10,"axlab","free surface &nbsp;&middot;&nbsp; "+(c.P0?"P<tspan baseline-shift=\"sub\" font-size=\"9\">atm</tspan> acting":"gage pressure"));
 
   // plane line back to O
   var Ox=Cx+c.yC*S*c.cos, Oy=SURF, EDGE=W-10;
@@ -413,27 +413,27 @@ function render(){
   $("rEff").innerHTML=c.yCs.toFixed(1)+" <small>m</small>";
   $("eqNote").innerHTML= st.abs
     ? '<span class="v">y</span><sub>C</sub>* = <span class="v">y</span><sub>C</sub> + <span class="v">P</span><sub>atm</sub>/<span class="v">&rho;g</span>sin<span class="v">&theta;</span> &mdash; the distance to where pressure would extrapolate to zero, now far above the surface.'
-    : 'With gauge pressure <span class="v">y</span><sub>C</sub>* is just <span class="v">y</span><sub>C</sub>. Offset is a fixed length <span class="v">k</span>&sup2; divided by depth.';
+    : 'With gage pressure <span class="v">y</span><sub>C</sub>* is just <span class="v">y</span><sub>C</sub>. Offset is a fixed length <span class="v">k</span>&sup2; divided by depth.';
   $("flipBtn").disabled = st.shape!=="triangle";
-  $("cap").innerHTML="Arrow <b>length</b> is normalised so the longest always fits &mdash; compare the taper, read the magnitude off the two labelled ends. "+
-    (st.abs? "With <span class=\"v\">P</span><sub>atm</sub> included the arrows are nearly equal &mdash; that is the point."
+  $("cap").innerHTML="Arrow <b>length</b> is normalised so the longest always fits &mdash; the taper shows the gradient and the magnitudes are labelled at the two ends. "+
+    (st.abs? "With <span class=\"v\">P</span><sub>atm</sub> included the arrows are nearly equal."
            : "The taper is the pressure gradient across the plate.");
 
   var m, cls="note";
   if(st.abs){
     cls="note hot";
-    m="<b>Look what happened.</b> Adding <span class='v'>P</span><sub>atm</sub> to one face pushes the zero-pressure line "+
+    m="Adding <span class='v'>P</span><sub>atm</sub> to one face pushes the zero-pressure line "+
       (PATM/(RHO*G)).toFixed(1)+" m above the free surface, so the plate now sits <b>"+(c.yCs/c.yC).toFixed(1)+
       "&times;</b> further from where pressure vanishes than it does from the water surface. Pressure across it is nearly uniform, and CP collapses onto C. "+
-      "A real gate has air on <em>both</em> faces, so <span class='v'>P</span><sub>atm</sub> cancels and you use gauge pressure &mdash; which is why this box is normally unticked.";
+      "A real gate has air on <em>both</em> faces, so <span class='v'>P</span><sub>atm</sub> cancels and you use gage pressure &mdash; so this box is normally unticked.";
   } else if(st.th<20){
     m="<b>Nearly horizontal.</b> Every point sits at almost the same depth, so pressure barely varies and CP is almost exactly at C. A truly horizontal plate has CP = C.";
   } else if(c.off/sh.b>0.10){
     m="<b>Shallow and steep.</b> The bottom of the plate feels much more pressure than the top, so the resultant sits well down the plate.";
   } else {
-    m="Push the plate deeper and the offset shrinks &mdash; not because the gradient changes, but because it matters less next to the pressure already there.";
+    m="Increasing the depth reduces the offset. The gradient is unchanged; it is small relative to the pressure already present.";
   }
-  if(st.shape==="triangle"&&st.flip) m+=" <br><br><b>And the flip changed nothing.</b> Reflecting a shape about its own centroidal axis leaves <span class='v'>I</span><sub>xx,C</sub> untouched, so apex-up and apex-down have identical centres of pressure. Most people bet otherwise.";
+  if(st.shape==="triangle"&&st.flip) m+=" <br><br><b>The flip changes nothing.</b> Reflecting a shape about its own centroidal axis leaves <span class='v'>I</span><sub>xx,C</sub> unchanged, so apex-up and apex-down have identical centres of pressure.";
   var el=$("insight"); el.className=cls; el.innerHTML=m;
 
   [].slice.call(document.querySelectorAll("#shapeSeg button")).forEach(function(b){

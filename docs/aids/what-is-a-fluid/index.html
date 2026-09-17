@@ -148,8 +148,8 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
 <!-- ============ 1. SOLID ============ -->
 <section class="panel" id="p0">
   <p class="eyebrow">Step 1 &mdash; a solid under shear</p>
-  <h2>Push it sideways. It moves, then it stops.</h2>
-  <p class="lede">Bond a block of steel between two plates and drag the top plate sideways. The block distorts through an angle and then <strong>holds there</strong> &mdash; a static equilibrium. The angle is set by the stress, not by how long you wait.</p>
+  <h2>A solid reaches a static equilibrium under shear.</h2>
+  <p class="lede">Bond a block of steel between two plates and drag the top plate sideways. The block distorts through an angle and then <strong>holds there</strong>, at a static equilibrium. The angle is set by the stress and not by elapsed time.</p>
 
   <div class="split">
     <div class="card">
@@ -197,7 +197,7 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
           <!-- shear stress label on top -->
           <text class="axlab" x="90" y="82">&#964; = F / A  applied to the top face</text>
         </svg>
-        <figcaption>Angle drawn at <b>200&times;</b> the true scale. At the steel&rsquo;s yield stress the real distortion is about a tenth of a degree &mdash; far too small to see.</figcaption>
+        <figcaption>Angle drawn at <b>200&times;</b> the true scale. At the steel&rsquo;s yield stress the real distortion is about a tenth of a degree &mdash; below the resolution of the drawing.</figcaption>
       </figure>
 
       <div class="ctrls">
@@ -248,7 +248,7 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
           <text class="axtitle" x="221" y="250" text-anchor="middle">shear strain &#947; &nbsp;(&times;10&#8315;&#179; rad)</text>
           <text class="axtitle" x="14" y="118" text-anchor="middle" transform="rotate(-90 14 118)">shear stress &#964; (MPa)</text>
         </svg>
-        <figcaption>One stress, one strain. Read the stress off the axis and the angle is determined &mdash; <span class="v">&tau;</span> = <span class="v">G</span><span class="v">&gamma;</span> in the elastic range.</figcaption>
+        <figcaption>One stress, one strain. The stress determines the angle, with <span class="v">&tau;</span> = <span class="v">G</span><span class="v">&gamma;</span> in the elastic range.</figcaption>
       </figure>
       <dl class="readout">
         <div class="ro is-solid"><dt>Shear strain</dt><dd id="roGamS">0.0 <small>&times;10&#8315;&#179; rad</small></dd></div>
@@ -269,8 +269,8 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
 <!-- ============ 2. FLUID ============ -->
 <section class="panel" id="p1" hidden>
   <p class="eyebrow">Step 2 &mdash; a fluid under shear</p>
-  <h2>Same push. It moves, and it keeps moving.</h2>
-  <p class="lede">Replace the steel with water and drag the same way. There is no angle at which it settles. The distortion grows for as long as the stress acts &mdash; so <strong>time has entered the problem</strong>, and the thing we can measure is no longer strain but the <em>rate</em> of strain.</p>
+  <h2>A fluid reaches no equilibrium under shear.</h2>
+  <p class="lede">Replace the steel with water and drag the same way. There is no angle at which it settles. The distortion grows for as long as the stress acts, so <strong>time enters the problem</strong>, and the measurable quantity is the <em>rate</em> of strain rather than the strain.</p>
 
   <div class="split">
     <div class="card">
@@ -345,7 +345,7 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
         <button class="btn primary" id="runF" type="button">Apply shear stress</button>
         <button class="btn" id="resetF" type="button">Reset</button>
       </div>
-      <div class="verdict f" id="verdictF"><b>At rest.</b> Press apply &mdash; then watch for an angle it settles at.</div>
+      <div class="verdict f" id="verdictF"><b>At rest.</b> No equilibrium angle exists once stress is applied.</div>
     </div>
 
     <div class="card">
@@ -362,7 +362,7 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
         <p class="eqnote">Stress is proportional to the <strong>rate</strong> of strain. The strain itself never stops growing, so it cannot be what the stress is proportional to.</p>
       </div>
 
-      <p class="footnote" style="margin-top:20px">The angle <span class="v">&gamma;</span> has no equilibrium value, so the drawing re-marks a fresh line of fluid whenever the old one leans off the picture. The counter does not reset &mdash; that is the point.</p>
+      <p class="footnote" style="margin-top:20px">The angle <span class="v">&gamma;</span> has no equilibrium value, so the drawing re-marks a fresh line of fluid whenever the old one leans off the picture. The counter does not reset.</p>
     </div>
   </div>
 
@@ -375,7 +375,7 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
 <!-- ============ 3. THE DIFFERENCE ============ -->
 <section class="panel" id="p2" hidden>
   <p class="eyebrow">Step 3 &mdash; the discriminating experiment</p>
-  <h2>One graph tells them apart.</h2>
+  <h2>Strain against time, for both materials.</h2>
   <p class="lede">Apply the same shear stress to both at the same moment, hold it, then take it away. Plot the distortion against <strong>time</strong> &mdash; the axis that did not matter until now.</p>
 
   <div class="card">
@@ -414,7 +414,7 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
         <text class="axtitle" x="316" y="276" text-anchor="middle">time &#8594;</text>
         <text class="axtitle" x="16" y="132" text-anchor="middle" transform="rotate(-90 16 132)">shear strain &#947;</text>
       </svg>
-      <figcaption>The vertical axis is deliberately unscaled: steel and water differ here by many orders of magnitude. What matters is the <b>shape</b> &mdash; a step that holds, against a ramp that never levels off.</figcaption>
+      <figcaption>The vertical axis is deliberately unscaled: steel and water differ here by many orders of magnitude. The comparison is between the <b>shapes</b>, a step that holds against a ramp that does not level off.</figcaption>
     </figure>
     <div class="ctrls"><button class="btn primary" id="playG" type="button">Run both</button></div>
   </div>
@@ -429,7 +429,7 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
 <section class="panel" id="p3" hidden>
   <p class="eyebrow">Step 4 &mdash; the definition that falls out</p>
   <h2>A fluid cannot resist a shear stress at rest.</h2>
-  <p class="lede">Not &ldquo;a fluid is wet,&rdquo; not &ldquo;a fluid takes the shape of its container.&rdquo; Those are consequences. The definition is a statement about <strong>what happens when you shear it</strong>.</p>
+  <p class="lede">A fluid is not defined by being wet, or by taking the shape of its container. Those are consequences. The definition is a statement about <strong>the response to shear</strong>.</p>
 
   <div class="laws">
     <div class="law s">
@@ -448,24 +448,24 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
       <ul>
         <li>Stress sets the <b>strain rate</b>.</li>
         <li>No equilibrium exists: it never stops.</li>
-        <li>Time is the whole point.</li>
+        <li>Time appears in the law.</li>
         <li>Release it and it stays where it was left.</li>
       </ul>
     </div>
   </div>
 
   <div class="thesis">
-    <p>Because no angle balances the stress, the fluid keeps deforming for as long as the stress is there. That continuous, unending deformation <em>is flow</em>. Flow is not something a fluid happens to do &mdash; it is the thing that makes it a fluid.</p>
+    <p>Because no angle balances the stress, the fluid keeps deforming for as long as the stress is there. That continuous deformation <em>is flow</em>. Continuous deformation under shear is what defines a fluid.</p>
   </div>
 
   <div class="split" style="margin-top:26px">
     <div class="card">
       <h3>So which phases are fluids?</h3>
-      <p style="margin:0 0 14px;color:var(--ink-2);font-size:15.5px">Apply the test &mdash; can it hold a shear stress without moving?</p>
+      <p style="margin:0 0 14px;color:var(--ink-2);font-size:15.5px">Apply the test: can it hold a shear stress without moving?</p>
       <div style="display:grid;gap:10px">
         <div style="display:flex;gap:12px;align-items:baseline;padding:10px 12px;border-radius:7px;background:var(--solid-soft)">
           <b style="font-family:Archivo,sans-serif;color:var(--solid);min-width:62px">SOLID</b>
-          <span style="font-size:14.5px">Yes, it can &mdash; <b>not a fluid</b>.</span>
+          <span style="font-size:14.5px">Yes: <b>not a fluid</b>.</span>
         </div>
         <div style="display:flex;gap:12px;align-items:baseline;padding:10px 12px;border-radius:7px;background:var(--fluid-soft)">
           <b style="font-family:Archivo,sans-serif;color:var(--fluid);min-width:62px">LIQUID</b>
@@ -479,10 +479,10 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
     </div>
     <div class="card">
       <h3>Then what separates liquid from gas?</h3>
-      <p style="margin:0 0 12px;color:var(--ink-2);font-size:15.5px">Cohesion between molecules &mdash; a <em style="font-style:normal;color:var(--ink);font-weight:600">second</em> question, asked only after both have already been admitted as fluids.</p>
+      <p style="margin:0 0 12px;color:var(--ink-2);font-size:15.5px">Cohesion between molecules. This is a <em style="font-style:normal;color:var(--ink);font-weight:600">separate</em> question, answered after both have been classified as fluids.</p>
       <ul style="margin:0;padding-left:18px;color:var(--ink-2);font-size:14.5px">
-        <li style="margin-bottom:7px"><b style="color:var(--ink)">Liquid</b> &mdash; strong cohesion; keeps its volume, takes the container&rsquo;s shape, forms a free surface under gravity.</li>
-        <li><b style="color:var(--ink)">Gas</b> &mdash; weak cohesion; fills the whole container, no free surface.</li>
+        <li style="margin-bottom:7px"><b style="color:var(--ink)">Liquid</b>: strong cohesion; keeps its volume, takes the container&rsquo;s shape, forms a free surface under gravity.</li>
+        <li><b style="color:var(--ink)">Gas</b>: weak cohesion; fills the whole container, no free surface.</li>
       </ul>
     </div>
   </div>
@@ -575,7 +575,7 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
         : "<b>At rest.</b> No stress, no distortion.";
     }else{
       $("roEqS").textContent="yes";
-      v.innerHTML="<b>Holding at "+(gam*180/Math.PI).toFixed(3)+"&deg;.</b> It reached this angle and stopped. It will sit here for as long as τ is applied &mdash; a second or a century, same angle.";
+      v.innerHTML="<b>Holding at "+(gam*180/Math.PI).toFixed(3)+"&deg;.</b> It reached this angle and stopped. It holds this angle for as long as τ is applied.";
     }
   }
   tauS.addEventListener("input",function(){released=false;drawSolid(+tauS.value)});
@@ -620,9 +620,9 @@ input[type=range]{width:100%;accent-color:var(--solid);height:22px;margin:0}
     $("roRateF").innerHTML=(fRun?"1000":"0")+' <small>s&#8315;&#185;</small>';
     $("roEqF").textContent=fRun?"never":(fT>0?"none found":"—");
     var v=$("verdictF");
-    if(fRun)v.innerHTML="<b>Still moving.</b> γ = "+gTot.toFixed(2)+" rad and climbing. Wait as long as you like &mdash; there is no angle it settles at.";
-    else if(fT>0)v.innerHTML="<b>Stopped, not recovered.</b> Take the stress away and the motion ends &mdash; but the fluid stays exactly where it was left. Nothing springs back.";
-    else v.innerHTML="<b>At rest.</b> Press apply &mdash; then watch for an angle it settles at.";
+    if(fRun)v.innerHTML="<b>Still moving.</b> γ = "+gTot.toFixed(2)+" rad and climbing. There is no angle at which it settles.";
+    else if(fT>0)v.innerHTML="<b>Stopped, not recovered.</b> The motion ends when the stress is removed, but the fluid stays where it was left. There is no recovery.";
+    else v.innerHTML="<b>At rest.</b> No equilibrium angle exists once stress is applied.";
   }
   function tick(now){
     if(!fRun)return;
