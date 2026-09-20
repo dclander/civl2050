@@ -90,8 +90,24 @@ table.r td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-we
 .legend i{width:16px;height:3px;border-radius:2px;display:block}
 @media (max-width:900px){.grid{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style></head>
+</style><!--sitenav:start--><style>
+.sitenav{--nv-ink:#4E565F;--nv-ink2:#8A857C;--nv-on:#15181C;--nv-rule:#DCD9D3;
+ font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;font-size:13.5px;
+ border-bottom:1px solid var(--nv-rule)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sitenav{
+ --nv-ink:#A7B0B8;--nv-ink2:#78828B;--nv-on:#E9ECEE;--nv-rule:#2C3339}}
+:root[data-theme="dark"] .sitenav{
+ --nv-ink:#A7B0B8;--nv-ink2:#78828B;--nv-on:#E9ECEE;--nv-rule:#2C3339}
+.sitenav-in{max-width:var(--navw,1140px);margin:0 auto;
+ padding:10px var(--navp,24px);display:flex;align-items:baseline;gap:20px}
+.sitenav-brand{font-weight:600;color:var(--nv-on);letter-spacing:-.01em;margin-right:auto}
+.sitenav a{color:var(--nv-ink);text-decoration:none;white-space:nowrap}
+.sitenav a:hover{color:var(--nv-on)}
+.sitenav a[aria-current="page"]{color:var(--nv-on);font-weight:600}
+@media (max-width:520px){.sitenav-brand{display:none}.sitenav-in{gap:16px}}
+</style><!--sitenav:end--></head>
 <body>
+<!--sitenav:start--><nav class="sitenav" style="--navw:1140px;--navp:24px" aria-label="Site"><div class="sitenav-in"><span class="sitenav-brand">CIVL 2050</span><a href="../../">Schedule</a><a href="../">In-class aids</a></div></nav><!--sitenav:end-->
 <div class="wrap">
 <header>
  <div><p class="eyebrow">CIVL 2050 &middot; Class 05</p><h1>Flow kinematics</h1></div>
